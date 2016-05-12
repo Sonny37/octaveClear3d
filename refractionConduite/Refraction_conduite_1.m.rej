@@ -1,0 +1,11 @@
+diff a/refractionConduite/Refraction_conduite_1.m b/refractionConduite/Refraction_conduite_1.m	(rejected hunks)
+@@ -23,6 +23,9 @@
+ 	mkdir(['i' num2str(iterations)])
+ endif
+ 	
++	cas2=1;	%pour enregistrer les images meme quand le cas 2 est nul
++    flag=[0 0]; % pour fitter les cas sans que le nombre de colonnes plante
++  
+   for k=1:iterations+1;
+ 	hk(k)=(k-1)/iterations*0.13;
+ 	h=hk(k);

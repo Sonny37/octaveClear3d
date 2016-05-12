@@ -23,9 +23,6 @@ D=0.12; %demi-bord extérieur [m]
 	mkdir(['i' num2str(iterations)])
 endif
 	
-	cas2=1;	%pour enregistrer les images meme quand le cas 2 est nul
-    flag=[0 0]; % pour fitter les cas sans que le nombre de colonnes plante
-  
   for k=1:iterations+1;
 	hk(k)=(k-1)/iterations*0.13;
 	h=hk(k);
@@ -94,9 +91,6 @@ endif
 								endif
 							else
 								disp(["cas 1:Le point d\'intersection de coordonn\x82", "es[0", num2str(y3), "] \x85 l\'it\x82" "ration ", num2str(k),"n\xF8 est hors du cercle interne de rayon R2=", num2str(R2)]);
-								if(flag(1) == 0)
-									flag(1)= k-1;
-								endif %fin flag check pour figer le nombre de colonnes a interpoler par la suite
 							endif %fin point en x=0 verif position verticale
 						else 	
 							disp(["coordonn\x82", "es complexes pour P2"])
