@@ -1,0 +1,5 @@
+2	2	15	15
+/home/lchatell/Data/rheo/2009_05_26/calib/cam1_mire3d_dn.tif	10.5000000	704|365	707|253	601|366	56|0	1279|1083	ok	/home/lchatell/Data/rheo/2009_05_26/calib/mire3d/cam1_mire3d_dn_mire3d.png	13	10	0|0
+/home/lchatell/Data/rheo/2009_05_26/calib/cam1_mire3d_up.tif	12.000000	662|308	665|196	563|308	74|0	1282|1079	ok	/home/lchatell/Data/rheo/2009_05_26/calib/mire3d/cam1_mire3d_up_mire3d.png	12	9	7.5|7.5
+/home/lchatell/Data/rheo/2009_05_26/calib/cam2_mire3d_dn.tif	10.500000	663|384	664|266	562|384	63|0	1335|1127	ok	/home/lchatell/Data/rheo/2009_05_26/calib/mire3d/cam2_mire3d_dn_mire3d.png	13	10	0|0
+/home/lchatell/Data/rheo/2009_05_26/calib/cam2_mire3d_up.tif	12.000000	608|325	607|210	507|328	64|0	1336|1124	ok	/home/lchatell/Data/rheo/2009_05_26/calib/mire3d/cam2_mire3d_up_mire3d.png	12	9	7.5|7.5
