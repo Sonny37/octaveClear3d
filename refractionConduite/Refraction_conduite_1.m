@@ -1,5 +1,5 @@
-function [h, hrk1, hrk2]=Refraction_conduite_1(iterations)
-
+function [flag, h, hrk1, hrk2]=Refraction_conduite_1(iterations)
+%iterations=100;
 % compute refraction of light rays from an external camera
 % to a vertical plane inside a water filled PMMA duct
 % 2 cases:
@@ -134,5 +134,18 @@ for k=1:iterations+1;
 %if(k>(iterations-0.05*iterations))
 	  saveas(1,['C:/Users/vrouille/Documents/octave/refractionConduite/i', num2str(iterations) ,'/hrk12_', num2str(k), '.png']) ;
 %		endif
-	  endfor
+%	else
+%		disp("Cas 2 : Pas de points d\'intersection pour P2")
+%	endif
+%	
+%	%---For test-debug mode only---%
+%	if(k==1)
+%		disp("\tk\ta\td\th\tR1\t\tx1\tR2\tx2");
+%	endif
+	
+	disp([k y3 R2 ]);
+	%drawnow
+	%pause
+	%--------------------------------%
+endfor  
 endfunction
