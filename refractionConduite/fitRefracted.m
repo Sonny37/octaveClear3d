@@ -1,0 +1,27 @@
+function m_p = fitRefracted(polynomialOrder, hrk1, hrk2, h, iterations, echantillons,cpt, flag)%polynomialOrder, nCase, hrk1, hrk2, h, iterations, echantillons
+    
+    if(flag(1) == 0) % ca veut dire que y3 a toujours été inférieur à y2 et par conséquent ...
+            flag(1)=iterations;
+    
+    a=hrk1(1,1:flag(1))-h;
+    b=hrk2(1,1:flag(2))-h;
+    m_cases=[a; b];
+    m_legend=["-sg;ecart1;"; "-sg;ecart2;"; "ob;fonction;"; "-r;polynome;"];
+        
+for k=1:2
+    figure(2*cpt+k) %détermination de la cohérence du polynôme avec la courbe originelle
+    m_fig=plot(m_cases(k,1:flag(k)), m_legend(k,:));
+    hold on;
+    m_x = get(m_fig, "xdata");	%abscisses
+    m_y = get(m_fig, "ydata");	%ordonnees
+    m_n = polynomialOrder; %ordre du polnome
+    m_p = polyfit(m_x, m_y, m_n); %interpolation polynomiale
+     %evaluation du polynome
+    xfit = linspace(min(m_x),max(m_x),echantillons);
+    yfit = polyval(m_p,xfit);
+    plot(m_x,m_y,m_legend(3,:),xfit,yfit,m_legend(4,:)); %affichage de la fonction et du polynôme
+    legend show Location NorthEastOutside
+    saveas(2+k, ['i' num2str(iterations) '/hrk_',num2str(k),'_fitting_ordre_',num2str(polynomialOrder),'.png']);
+endfor
+	 
+endfunction

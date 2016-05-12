@@ -1,0 +1,300 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character 'á'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '¬'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '¿'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '®'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character 'á'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '¬'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '¿'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '®'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character 'á'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '¿'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '¿'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '®'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character 'á'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '¿'
+warning: ft_render: skipping missing glyph for character '├'
+warning: ft_render: skipping missing glyph for character '¿'
+error: atan2: not defined for complex numbers
+error: called from:
+error:   C:\Users\vrouille\Downloads\Refraction_conduite_1.m at line 122, column
+ 6
+octave-3.6.4.exe:2> figure
+octave-3.6.4.exe:3> plot(hkr1-h)
+error: 'hkr1' undefined near line 3 column 6
+error: evaluating argument list element number 1
+octave-3.6.4.exe:3> plot(hrk1-h)
+octave-3.6.4.exe:4> var=hrk1-h)
+parse error:
+
+  syntax error
+
+>>> var=hrk1-h)
+              ^
+
+octave-3.6.4.exe:4> var=hrk1-h
+var =
+
+ Columns 1 through 7:
+
+  -0.104500  -0.097357  -0.090213  -0.083067  -0.075916  -0.068753  -0.061570
+
+ Columns 8 through 12:
+
+  -0.054345  -0.047037  -0.039552  -0.031633  -0.022199
+
+<\Users\vrouille\Documents\octave\refraction conduite\hrk1moinsh.txt var
+warning: save: no such variable 'conduite\hrk1moinsh.txt'
+<r C:\Users\vrouille\Documents\octave\refraction conduite\dataHrk1-h.txt
+warning: save: no such variable 'C:\Users\vrouille\Documents\octave\refraction'
+warning: save: no such variable 'conduite\dataHrk1-h.txt'
+octave-3.6.4.exe:7> save var 'C:\Users\vrouille\Documents\octave\refraction co>
+warning: save: no such variable 'C:\Users\vrouille\Documents\octave\refraction c
+onduite\dataHrk1-h.txt'
+octave-3.6.4.exe:8> help save
+<\Users\vrouille\Documents\octave\refraction conduite\test.txt var
+warning: save: no such variable 'conduite\test.txt'
+octave-3.6.4.exe:10> save test.txt var
+<'C:\Users\vrouille\Documents\octave\refraction conduite')
+octave-3.6.4.exe:12> polyfit(var)
+error: Invalid call to polyfit.  Correct usage is:
+
+ -- Function File: P = polyfit (X, Y, N)
+ -- Function File: [P, S] = polyfit (X, Y, N)
+ -- Function File: [P, S, MU] = polyfit (X, Y, N)
+
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at http://www.octave.org and via the help@octave.org
+mailing list.
+octave-3.6.4.exe:12> gca
+ans = -3.4656
+octave-3.6.4.exe:13> gca
+ans = -3.4656
+octave-3.6.4.exe:14> set
+error: Invalid call to set.  Correct usage is:
+
+ -- Built-in Function:  set (H, PROPERTY, VALUE, ...)
+ -- Built-in Function:  set (H, PROPERTIES, VALUES)
+ -- Built-in Function:  set (H, PV)
+
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at http://www.octave.org and via the help@octave.org
+mailing list.
+octave-3.6.4.exe:14> fig1=plot(hrk1-h)
+fig1 = -1.2271
+octave-3.6.4.exe:15> get(fig1)
+ans =
+
+  scalar structure containing the fields:
+
+    beingdeleted = off
+    busyaction = queue
+    buttondownfcn = [](0x0)
+    children = [](0x1)
+    clipping = on
+    createfcn = [](0x0)
+    deletefcn = [](0x0)
+    handlevisibility = on
+    hittest = on
+    interruptible = on
+    parent = -3.4656
+    selected = off
+    selectionhighlight = on
+    tag =
+    type = line
+    userdata = [](0x0)
+    visible = on
+    __modified__ = on
+    uicontextmenu = [](0x0)
+    xdata =
+
+        1    2    3    4    5    6    7    8    9   10   11   12
+
+    ydata =
+
+     Columns 1 through 6:
+
+      -0.104500  -0.097357  -0.090213  -0.083067  -0.075916  -0.068753
+
+     Columns 7 through 12:
+
+      -0.061570  -0.054345  -0.047037  -0.039552  -0.031633  -0.022199
+
+    zdata = [](0x0)
+    xdatasource =
+    ydatasource =
+    zdatasource =
+    color =
+
+       0   0   1
+
+    linestyle = -
+    linewidth =  0.50000
+    marker = none
+    markeredgecolor = auto
+    markerfacecolor = none
+    markersize =  6
+    interpreter = tex
+    displayname =
+    erasemode = normal
+
+octave-3.6.4.exe:16> datax=get(fig1,xdata)
+error: 'xdata' undefined near line 16 column 16
+error: evaluating argument list element number 2
+octave-3.6.4.exe:16> get(fig1,xdata)
+error: 'xdata' undefined near line 16 column 10
+error: evaluating argument list element number 2
+octave-3.6.4.exe:16> get(fig1,xdata)
+error: 'xdata' undefined near line 16 column 10
+error: evaluating argument list element number 2
+octave-3.6.4.exe:16> get(fig1)
+ans =
+
+  scalar structure containing the fields:
+
+    beingdeleted = off
+    busyaction = queue
+    buttondownfcn = [](0x0)
+    children = [](0x1)
+    clipping = on
+    createfcn = [](0x0)
+    deletefcn = [](0x0)
+    handlevisibility = on
+    hittest = on
+    interruptible = on
+    parent = -3.4656
+    selected = off
+    selectionhighlight = on
+    tag =
+    type = line
+    userdata = [](0x0)
+    visible = on
+    __modified__ = on
+    uicontextmenu = [](0x0)
+    xdata =
+
+        1    2    3    4    5    6    7    8    9   10   11   12
+
+    ydata =
+
+     Columns 1 through 6:
+
+      -0.104500  -0.097357  -0.090213  -0.083067  -0.075916  -0.068753
+
+     Columns 7 through 12:
+
+      -0.061570  -0.054345  -0.047037  -0.039552  -0.031633  -0.022199
+
+    zdata = [](0x0)
+    xdatasource =
+    ydatasource =
+    zdatasource =
+    color =
+
+       0   0   1
+
+    linestyle = -
+    linewidth =  0.50000
+    marker = none
+    markeredgecolor = auto
+    markerfacecolor = none
+    markersize =  6
+    interpreter = tex
+    displayname =
+    erasemode = normal
+
+octave-3.6.4.exe:17> get(fig1,xdata)
+error: 'xdata' undefined near line 17 column 10
+error: evaluating argument list element number 2
+octave-3.6.4.exe:17> get(fig1,ydata)
+error: 'ydata' undefined near line 17 column 10
+error: evaluating argument list element number 2
+octave-3.6.4.exe:17> get(fig1,linestyle)
+error: 'linestyle' undefined near line 17 column 10
+error: evaluating argument list element number 2
+octave-3.6.4.exe:17> gca
+ans = -3.4656
+octave-3.6.4.exe:18> gca
+ans = -3.4656
+octave-3.6.4.exe:19> figure(fig)
+error: 'fig' undefined near line 19 column 8
+error: evaluating argument list element number 1
+octave-3.6.4.exe:19> figure(fig1)
+error: figure: expecting figure handle or figure number
+error: called from:
+error:   C:\Software\Octave-3.6.4\share\octave\3.6.4\m\plot\figure.m at line 50,
+ column 7
+octave-3.6.4.exe:19>
