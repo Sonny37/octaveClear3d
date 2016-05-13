@@ -19,14 +19,14 @@ R2=0.1; %Rayon interne [m]
 D=0.12; %demi-bord extérieur [m]
 
 %hauteur de l'objet d'image dans le plan x = 0 [m]
- if(isdir(['C:/Users/vrouille/Documents/octave/refractionConduite/i' num2str(iterations)]) == 0)
+ if(isdir(['i' num2str(iterations)]) == 0)
 	mkdir(['i' num2str(iterations)])
  endif
 	
 	cas2=1;	%pour enregistrer les images meme quand le cas 2 est nul
     %flag=[0 0]; % pour fitter les cas sans que le nombre de colonnes plante 
 	
-  for k=1:iterations+1;
+for k=1:iterations+1;
 	hk(k)=(k-1)/iterations*0.1;
 	h=hk(k);
 	
