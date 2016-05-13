@@ -23,7 +23,8 @@ D=0.12; %demi-bord extérieur [m]
 	mkdir(['i' num2str(iterations)])
 endif
 	cas2=1;	%pour enregistrer les images meme quand le cas 2 est nul
-    flag=[0 0]; % pour fitter les cas sans que le nombre de colonnes plante
+    %flag=[0 0]; % pour fitter les cas sans que le nombre de colonnes plante 
+	
   for k=1:iterations+1;
 	hk(k)=(k-1)/iterations*0.13;
 	h=hk(k);
@@ -102,6 +103,9 @@ endif
 					else	
 						disp(["Cas 1 : les coordonn\x82", "es de P2 sont hors du cercle"]);
 					endif % fin verif cercle 2
+								% % if(flag(1) == 0)
+									% % flag(1)= k-1;
+								% % endif %fin flag check pour figer le nombre de colonnes a interpoler par la suite
 				else
 					disp("Cas 1 :pas de point d\'intersection P2");
 				endif %fin verif intersection P2
@@ -184,6 +188,10 @@ endif
 %	if(k==1)
 %		disp("\tk\ta\td\th\tR1\t\tx1\tR2\tx2");
 %	endif
+               % cas2=0;
+				% % if(flag(2) == 0)%figer le nombre de colonnes a interpoler par la suite
+                   % % flag(2)=k-1;
+               % % endif%fin flag check pour 
 	
 	disp([k y3 R2 ]);
 	%drawnow
