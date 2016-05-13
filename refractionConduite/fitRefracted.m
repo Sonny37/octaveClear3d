@@ -35,4 +35,22 @@ for k=1:2
     saveas(2+k, ['i' num2str(iterations) '/hrk_',num2str(k),'_fitting_ordre_',num2str(polynomialOrder),'.png']);
 endfor
 	 
-endfunction
+	 %for test only
+	 % disp("flag :")
+	 % flag
+	 % pause;
+	 % figure(2*cpt+1)
+	 % a=hrk1(1,1:columns(hrk1))-h;
+	 % m_legend=["-sg;ecart1;"; "-sg;ecart2;"; "ob;fonction;"; "-r;polynome;"];
+	 % m_fig=plot(a, m_legend(1,:));
+     % hold on;
+     % m_x = get(m_fig, "xdata");	%abscisses
+     % m_y = get(m_fig, "ydata");	%ordonnees
+     % m_n = polynomialOrder; %ordre du polynome
+     % m_p = polyfit(m_x, m_y, m_n); %interpolation polynomiale
+	 % xfit = linspace(min(m_x),max(m_x),echantillons);
+	 % yfit = polyval(m_p,xfit);
+	 % plot(m_x,m_y,m_legend(3,:),xfit,yfit,m_legend(4,:)); 
+	 % legend show Location NorthEastOutside
+	 
+	 endfunction

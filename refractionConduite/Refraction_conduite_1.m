@@ -1,5 +1,5 @@
-function [flag, h, hrk1, hrk2]=Refraction_conduite_1(iterations)
-%iterations=100;
+%function [flag, h, hrk1, hrk2]=Refraction_conduite_1(iterations)
+iterations=20;
 % compute refraction of light rays from an external camera
 % to a vertical plane inside a water filled PMMA duct
 % 2 cases:
@@ -97,7 +97,7 @@ D=0.12; %demi-bord extérieur [m]
 								title(["Réfraction à travers une interface circulaire Air-PMMA de diamètre " num2str(2000*R1) "mm suivie d'une interface circulaire PMMA-Eau de diamètre " num2str(2000*R2) "mm"]);
 								hrk1(k)=y3;
 								if(cas2 == 0)
-									saveas(1,['C:/Users/vrouille/Documents/octave/refractionConduite/i', num2str(iterations) ,'/hrk12_', num2str(k), '.png']);
+									saveas(1,['i', num2str(iterations) ,'/hrk12_', num2str(k), '.png']);
 								endif
 							%else
 								% disp(["cas 1:Le point d\'intersection de coordonn\x82", "es[0", num2str(y3), "] \x85 l\'it\x82" "ration ", num2str(k),"n\xF8 est hors du cercle interne de rayon R2=", num2str(R2)]);
@@ -146,16 +146,37 @@ D=0.12; %demi-bord extérieur [m]
 	if(delta1 >=0) %au moins une intersection avec le coté du carré
 		x2 = (-a1*b1 - sqrt(delta1))/(1+a1^2);
 		if ~isreal(x2);disp(num2str([delta1,x2]));end
+		y2 = (a1*x2+b1);
 		%if((y2<=R2 && y2 >= 0) && (x2>=-R2 && x2<=0)) % si P2 est dans le  cercle interne
 			%if(isreal(x2) || isreal(y2))%si coordonées de P2 sont réelles
+           %Rayon réfracté
+           % orientation de la normale au cerlce de rayon R2 à P2
+           beta1=atan2(y2,-x2);
+           
            %angle refraction: nH20*sin(alpha2+beta1)=nPMMA*sin(alpha1+beta1)
 		   s2_2=nPMMA*sin(alpha1+beta1)/nH2O;
 		   if s2_2<1
 			alpha2= asin (s2_2) - beta1;
            else
 			alpha2=NaN; %angle de reflexion alpha2+beta1=-alpha1-beta1 ;alpha=-alpha1-2beta1
+			
+		   endif
+           % equation du rayon : (y-y2)=a2(x-x2) => y=a2*x+b2
+           a2=tan(alpha2);
+           b2=y2-a2*x2;
+           
+           % intersection point P3 de rayon refracté and x=0 plane
+           y3=y2-a2*x2;
            %if(y3<=R2) %si le point d'intersection est dans le cercle
+             z2=R2*exp(i*2*pi*[0:.01:1]);
+             subplot(2,1,2)
+             plot([D;-D;-D;D;D],[-D;-D;D;D;-D],'k',z2,'k',[-d;0],[0;h],'-og',[0;0],[R2;-R2],'b',[x1;x2;0],[y1;y2;y3],'-or');
+             xlabel("x [m]");ylabel("y [m]");
+             title(["Réfraction à travers une interface plane Air-PMMA d'arête " num2str(2000*D) "mm suivie d'une interface circulaire PMMA-Eau de diamètre " num2str(2000*R2) "mm"])
+             
+             hrk2(k)=y3;
              %if(exist(['i', num2str(iterations) ,'/hrk12_', num2str(k), '.png'], 'file') == 0)
+               saveas(1,['i', num2str(iterations) ,'/hrk12_', num2str(k), '.png']) ;
              %endif
            %else
                % disp(["cas 2:Le point d\'intersection P3 de coordonnees[", num2str(y3), "] a l\'iteration ", num2str(k)," est hors du cercle interne de rayon R2=", num2str(R2)]);
@@ -177,9 +198,13 @@ D=0.12; %demi-bord extérieur [m]
 		hrk2(k)=NaN;
 	endif
 	
-	disp([k y3 R2 ]);
-	%drawnow
-	%pause
+	%---For test-debug mode only---%
+	 % if(k==1)
+		 % disp(" k\tR1\tx1\tR2\tx2\ty2\ty3");
+	 % endif
+	% disp([k R1 x1 R2 x2 y2 y3]);
+	% %drawnow
+	% pause
 	%--------------------------------%
 endfor  
-endfunction
+%endfunction
