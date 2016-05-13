@@ -74,8 +74,13 @@ D=0.12; %demi-bord extérieur [m]
 							beta1=atan2(y2,-x2);
 							
 							%  angle de refraction: nH20*sin(alpha2+beta1)=nPMMA*sin(alpha1+beta1)
-							alpha2= asin(nPMMA*sin(alpha1+beta1)/nH2O) - beta1;
-							
+							s2_1=nPMMA*sin(alpha1+beta1)/nH2O;
+							if s2_1<1
+								alpha2= asin (s2_1) - beta1;
+							else
+								alpha2=NaN; %angle de reflexion alpha2+beta1=-alpha1-beta1 ;alpha=-alpha1-2beta1
+							endif
+														
 							% equation du rayon : (y-y2)=a2(x-x2) => y=a2*x+b2 où:
 							a2=tan(alpha2);
 							b2=y2-a2*x2;
@@ -143,6 +148,12 @@ D=0.12; %demi-bord extérieur [m]
 		if ~isreal(x2);disp(num2str([delta1,x2]));end
 		%if((y2<=R2 && y2 >= 0) && (x2>=-R2 && x2<=0)) % si P2 est dans le  cercle interne
 			%if(isreal(x2) || isreal(y2))%si coordonées de P2 sont réelles
+           %angle refraction: nH20*sin(alpha2+beta1)=nPMMA*sin(alpha1+beta1)
+		   s2_2=nPMMA*sin(alpha1+beta1)/nH2O;
+		   if s2_2<1
+			alpha2= asin (s2_2) - beta1;
+           else
+			alpha2=NaN; %angle de reflexion alpha2+beta1=-alpha1-beta1 ;alpha=-alpha1-2beta1
            %if(y3<=R2) %si le point d'intersection est dans le cercle
              %if(exist(['i', num2str(iterations) ,'/hrk12_', num2str(k), '.png'], 'file') == 0)
              %endif
@@ -159,6 +170,12 @@ D=0.12; %demi-bord extérieur [m]
 		%else
 		%		disp("Cas 2 : P2 hors du cercle");	
 		%endif
+	else
+		disp(["Cas 2 : Pas de points d\'intersection pour P2", num2str([delta1, h])])
+		x2=NaN;
+		y2=NaN;
+		hrk2(k)=NaN;
+	endif
 	
 	disp([k y3 R2 ]);
 	%drawnow
