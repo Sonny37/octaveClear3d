@@ -1,8 +1,6 @@
 %polynomialOrder, nCase, hrk1, hrk2, h, iterations, echantillons
 function m_p = fitRefracted(h,hrk1, hrk2, R2, polynomialOrder, iterations, echantillons, cpt)%polynomialOrder, nCase, hrk1, hrk2, h, iterations, echantillons
-	
-	
-	
+
 	hrk1= hrk1(find(hrk1<=R2));	
 	hrk1= hrk1(find(hrk1 != 0)); 
 	hrk1= hrk1(find(hrk1 != NaN));
@@ -13,8 +11,8 @@ function m_p = fitRefracted(h,hrk1, hrk2, R2, polynomialOrder, iterations, echan
 	
 	test=[columns(hrk2) < columns(hrk1) columns(hrk2) > columns(hrk1)];
 	
-	nbCol=[columns(hrk1) columns(hrk2)]
-	pause
+	nbCol=[columns(hrk1) columns(hrk2)];
+	
 	if(test(1) == 1) %+ de colonnes cas1
 		hrk2=[hrk2 zeros(1,columns(hrk1)-columns(hrk2))];
 	elseif (test(2) == 1)%+ de colonnes cas2
@@ -23,18 +21,19 @@ function m_p = fitRefracted(h,hrk1, hrk2, R2, polynomialOrder, iterations, echan
 		%hrk1 et hrk2 on la meme taille
 	endif
 	
-	a=hrk1(1,:)-h
-	pause
-    b=hrk2(1,:)-h
-	pause
-    
+	a=hrk1(1,:)-h;
+	b=hrk2(1,:)-h;
+	
 	m_cases=[a ; b];
-	string4=["-r;" "polynomeordre_{" num2str(2*cpt) "};"];
+	string4=["-r;" "polynomeordre" num2str(2*cpt) ";"];
     m_legend=["-sg;ecart1;"; "-sg;ecart2;"; "ob;fonction;" ; string4];
         
 for k=1:2
     figure(2*cpt+k) %détermination de la cohérence du polynôme avec la courbe originelle
-    m_fig=plot(m_cases(k,1:nbCol(k)), m_legend(k,:));
+    m_cases(k,1:nbCol(k))
+	m_legend(k,:)
+	pause
+	m_fig=plot(m_cases(k,1:nbCol(k)), m_legend(k,:));
     hold on;
     
 	m_x = get(m_fig, "xdata");	%abscisses
