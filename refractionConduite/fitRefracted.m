@@ -30,9 +30,8 @@ function m_p = fitRefracted(h,hrk1, hrk2, R2, polynomialOrder, iterations, echan
         
 for k=1:2
     figure(2*cpt+k) %détermination de la cohérence du polynôme avec la courbe originelle
-    m_cases(k,1:nbCol(k))
-	m_legend(k,:)
-	pause
+    m_cases(k,1:nbCol(k));
+	m_legend(k,:);
 	m_fig=plot(m_cases(k,1:nbCol(k)), m_legend(k,:));
     hold on;
     
@@ -46,7 +45,7 @@ for k=1:2
     yfit = polyval(m_p,xfit);
     plot(m_x,m_y,m_legend(3,:),xfit,yfit,m_legend(4,:)); %affichage de la fonction et du polynôme
     legend show Location NorthEastOutside
-    saveas(2+k, ['i' num2str(iterations) '/hrk_',num2str(k),'_fitting_ordre_',num2str(polynomialOrder),'.png']);
+    saveas(2*cpt+k, ['i' num2str(iterations) '/hrk_',num2str(k),'_fitting_ordre_',num2str(polynomialOrder),'.png']);
 endfor
 	 
 	 % %for test only

@@ -6,7 +6,7 @@ iterations = input("Entrer le nombre d'iterations: 10 20 50 75 100 150 200 300 5
 	case {10,20,50, 75, 100, 150, 200, 300, 500}
 		disp("ok");
 		[ h, hrk1, hrk2, R2]=Refraction_conduite_1(iterations); 
-		for cpt=1:2							%ordre polynome,iterations,échantillons,cpt		   
+		for cpt=1:5							%ordre polynome,iterations,échantillons,cpt		   
 			m_p=fitRefracted(h,hrk1, hrk2, R2,2*cpt,iterations,10,cpt);
 		endfor
 		b=1;
