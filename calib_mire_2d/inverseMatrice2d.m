@@ -1,4 +1,10 @@
-function [M, X, Y, u, v, uv] = inverseMatrice2d(pointsXYuv, numeroCamera)
+function [M, X, Y, u, v, uv, posCam] = inverseMatrice2d(pointsXYuv, numeroCamera)
+
+if(findstr(pointsXYuv, "_dn_") == 98) %98 => pos du _dn_ ou up dans le path
+	posCam="dn";
+else
+	posCam="up";
+endif
 % function [M, matA]= inverseMatrice2d(pointsXYuv)
 camera1 = load (pointsXYuv);
 
@@ -37,22 +43,24 @@ matA= [ matA ; ones(nbRows,1)*[0 0 0] X Y ones(nbRows,1) mvX  mvY ];
 
  uv = M*[X Y ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
  uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
- 
-  figure
-  % grid on;
-  % subplot(211);
-  plot(u,v,'+;"u et v";', uv(:,1),uv(:,2),'s;"u\&v calcules";');
-  % subplot(223);
-  figure
-  plot(uv(:,1)-u,'o;"erreur entre les deux u";');  % pour observer l'erreur de positionnement de chaque points
-  
-  % subplot(224);
-  figure
-  plot(uv(:,2)-v,'o;"erreur des deux v";');  % pour observer l'erreur de positionnement de chaque points
- 
-if(numeroCamera == 1)
-	save 'C:\Users\vrouille\Downloads\calib_mire_2d\Matrix_Cam1.txt' M;
-	else
-	save 'C:\Users\vrouille\Downloads\calib_mire_2d\Matrix_Cam2.txt' M;
-	endif
+	% affichage  des vecteurs u et v 
+   figure(1)
+   grid on;
+   
+   subplot(211);
+   plot(u,v,'+;"u et v";', uv(:,1),uv(:,2),'s;"u\&v calcules";');
+   legend boxoff 
+   legend Location NorthOutside 
+
+   subplot(223);
+   plot(uv(:,1)-u,'o;"erreur entre les deux u";');  % pour observer l'erreur de positionnement de chaque points
+   legend boxoff 
+   legend Location NorthOutside  
+   
+   subplot(224);
+   plot(uv(:,2)-v,'o;"erreur des deux v";');  % pour observer l'erreur de positionnement de chaque points
+   legend boxoff 
+   legend Location NorthOutside 
+   saveas(1,['images ecarts val departs et calc/3en1/ecartsCam' num2str(numeroCamera) posCam '.png'])
+   save("-text", ['M/Matrix_Cam' num2str(numeroCamera) '_' posCam '.txt'], "M")
 endfunction
