@@ -1,4 +1,4 @@
-function [h, hrk1, hrk2,R2]=Refraction_conduite_1(iterations)
+function [hk, hrk1, hrk2,R2]=Refraction_conduite_1(iterations)
 %iterations=50;
 % compute refraction of light rays from an external camera
 % to a vertical plane inside a water filled PMMA duct
@@ -173,7 +173,7 @@ for k=1:iterations+1;
 		 % disp(" k\tR1\tx1\tR2\tx2\ty2\ty3");
 	 % endif
 	% disp([k R1 x1 R2 x2 y2 y3]);
-	% %drawnow
+	drawnow
 	% pause
 	%--------------------------------%
 	
