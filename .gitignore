@@ -11,3 +11,24 @@ refractionConduite/essais octave/
 refractionConduite/essais quand aucune condition/
 refractionConduite/i10/
 calib_mire_2d/err std u et v/
+calib_mire_2d/images ecarts val departs et calc/3en1/ecartsCam2dn.png
+calib_mire_2d/images ecarts val departs et calc/3en1/ecartsCam2up.png
+calib_mire_2d/images ecarts val departs et calc/cam1 u et v calc up.PNG
+calib_mire_2d/images ecarts val departs et calc/cam2 u et v calc dn.PNG
+calib_mire_2d/images ecarts val departs et calc/cam2 u et v calc up.PNG
+calib_mire_2d/images ecarts val departs et calc/erreur_cam1_dn u et v.PNG
+calib_mire_2d/images ecarts val departs et calc/erreur_cam1_up u et v.PNG
+calib_mire_2d/images ecarts val departs et calc/erreur_cam2_dn u et v.PNG
+calib_mire_2d/images ecarts val departs et calc/erreur_cam2_up u et v.PNG
+calib_mire_2d/images ecarts val departs et calc/u et v calc dn.PNG
+calib_mire_2d/M/Matrix_Cam1_dn.txt
+calib_mire_2d/M/Matrix_Cam1_up.txt
+calib_mire_2d/M/Matrix_Cam2_dn.txt
+calib_mire_2d/M/Matrix_Cam2_up.txt
+calib_mire_2d/M/test/Matrix_Cam1dn.txt
+calib_mire_2d/M/test/Matrix_Cam1up.txt
+calib_mire_2d/M/test/Matrix_Cam2dn.txt
+calib_mire_2d/M/test/Matrix_Cam2up.txt
+calib_mire_2d/images ecarts val departs et calc/3en1/cam 2dn.PNG
+calib_mire_2d/images ecarts val departs et calc/3en1/ecartsCam1dn.png
+calib_mire_2d/images ecarts val departs et calc/3en1/ecartsCam1up.png
