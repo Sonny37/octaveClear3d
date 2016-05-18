@@ -1,6 +1,6 @@
 %variables requises
 % uv u v 
-function[deltaU, deltaV, cdu, cdv, errU, errV] = distorsion2d(uv, u, v, numeroCamera, posCam, j, sumerrU, sumerrV)
+function[deltaU, deltaV, cdu, cdv, errU, errV] = distorsion2d(uv, u, v, numeroCamera, posCam, j)
 
 %évaluation de la distorsion de l'inversion de matrice
 
@@ -16,27 +16,21 @@ string{1}="polynomeFull";
 string{2}="polynomeSans1";
 string{3}="polynomeSansu_et_v";
 
-switch(j)
-	case 2
-		t=3;
-	case 3
-		t=6;
-	case 4	
-		t=9;
-	otherwise
-		t=0;
-endswitch
+
 for k=1:3
 	cdu=vars{k}\deltaU; 
 	cdv=vars{k}\deltaV;
 	uCorrige=vars{k}*cdu;
 	vCorrige=vars{k}*cdv;
-	errU=std(uv(:,1)-u-uCorrige); %erreur standard
-	errV=std(uv(:,2)-v-vCorrige);
-	zz=t+k
-	sumerrU(t+k)=errU;
-	sumerrV(t+k)=errV;
-	save ('-text',['err std u et v/MatrixCam' num2str(numeroCamera) '_' num2str(posCam) '_StdError_pol' string{k} '.txt'], "errU", "errV"); 
-	save ('-text','err std u et v/allstdErrors.txt', "sumerrU", "sumerrV");
+	errU{k}=std(uv(:,1)-u-uCorrige); %erreur standard
+	errV{k}=std(uv(:,2)-v-vCorrige);
+
+	%save ('-text',['err std u et v/MatrixCam' num2str(numeroCamera) '_' num2str(posCam) '_StdError_pol' string{k} '.txt'], "errU", "errV"); 
 	endfor
 endfunction
+
+h1=plot(allerrU(1,:));	set(h1,"color",colormap(rand(10,3)));	hold on;
+h2=plot(allerrU(2,:));	set(h2,"color",colormap(rand(10,3)));	hold on;
+h3=plot(allerrU(3,:));	set(h3,"color",colormap(rand(10,3)));	hold on;
+h4=plot(allerrU(4,:));	set(h4,"color",colormap(rand(10,3)));
+

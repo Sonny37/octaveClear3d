@@ -61,6 +61,7 @@ matA= [ matA ; ones(nbRows,1)*[0 0 0] X Y ones(nbRows,1) mvX  mvY ];
    plot(uv(:,2)-v,'o;"erreur des deux v";');  % pour observer l'erreur de positionnement de chaque points
    legend boxoff 
    legend Location NorthOutside 
-   saveas(1,['images ecarts val departs et calc/3en1/ecartsCam' num2str(numeroCamera) posCam '.png'])
-   save("-text", ['M/Matrix_Cam' num2str(numeroCamera) '_' posCam '.txt'], "M")
-endfunction
+   %saveas(1,['images ecarts val departs et calc/3en1/ecartsCam' num2str(numeroCamera) posCam '.png'])
+   %save("-text", ['M/Matrix_Cam' num2str(numeroCamera) '_' posCam '.txt'], "M")
+	drawnow
+   endfunction
