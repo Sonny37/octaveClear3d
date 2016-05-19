@@ -32,3 +32,16 @@ calib_mire_2d/M/test/Matrix_Cam2up.txt
 calib_mire_2d/images ecarts val departs et calc/3en1/cam 2dn.PNG
 calib_mire_2d/images ecarts val departs et calc/3en1/ecartsCam1dn.png
 calib_mire_2d/images ecarts val departs et calc/3en1/ecartsCam1up.png
+extractionDonnees/cam1_z000.tif
+extractionDonnees/essaiMireVueFace.PNG
+extractionDonnees/interp_bilin.m
+extractionDonnees/invMatCalibMire2d.m
+extractionDonnees/locate_grid4pt.m
+extractionDonnees/locate_refine.m
+extractionDonnees/mire2D8TE/11502003-2016-05-17-182355.tif
+extractionDonnees/mire2D8TE/11502003-2016-05-17-182524.tif
+extractionDonnees/mire2D8TE/11502003-2016-05-17-182545.tif
+extractionDonnees/mire2D8TE/11502003-2016-05-17-182604.tif
+extractionDonnees/mire2D8TE/11502003-2016-05-17-182628.tif
+extractionDonnees/mire2D8TE/11502003-2016-05-17-182659.tif
+extractionDonnees/mire2D8TE/Sans titre.tif
