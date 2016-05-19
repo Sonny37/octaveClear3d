@@ -14,7 +14,11 @@ function [M] = CalibMire2d(X,Y, uv)
  endfor 
  
 	X=[X X X X X X X X X X X X X X X];
-	Y=[X' X' X' X' X' X' X' X' X' X' X' X' X' X' X'];
+	Y=[Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y'];
+	X=reshape(X,225,1);
+	Y=sort(reshape(Y,225,1));
+	
+	
 
 %-----------------inverse matrice 2d --------------------
 
