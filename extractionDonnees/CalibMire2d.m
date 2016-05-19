@@ -1,14 +1,23 @@
 function [M] = CalibMire2d
 
- spaceOnEdge=1.6774647887324; 						%1mm 
- spacebetweenEdgeTwoDots=4.193661971831;			%2,5mm
- diameterEachDot=3.3544995774648;					%2mm
+	spaceOnEdge=1.6774647887324; 						%1mm 
+	spacebetweenEdgeTwoDots=4.193661971831;			%2,5mm
+	diameterEachDot=3.3544995774648;					%2mm
  
  
 %récupération de l'image
-I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
-nxy=[15 15]; %225 pts en 15 par 15
-ws=4;% valeur exacte 4.19....
+	images={ double(imread('mire2D8TE/11502003-2016-05-17-182355.tif')) 
+			, double(imread('mire2D8TE/11502003-2016-05-17-182524.tif')) 
+			, double(imread('mire2D8TE/11502003-2016-05-17-182545.tif')) 
+			, double(imread('mire2D8TE/11502003-2016-05-17-182604.tif')) 
+			, double(imread('mire2D8TE/11502003-2016-05-17-182628.tif'))
+			, double(imread('mire2D8TE/11502003-2016-05-17-182659.tif'))
+			, double(imread('cam1_z000.tif'))};
+			 
+	n=input("Choix de l\'image : 1 2 3 4 5 6 ou 7\n ");
+	I=images{n};
+	nxy=[15 15]; %225 pts en 15 par 15
+	ws=4;% valeur exacte 4.19....
 
 %localisation de l'image
 [uv,uv_interp,uv0]=locate_grid4pt(I,nxy,ws);
@@ -17,75 +26,73 @@ ws=4;% valeur exacte 4.19....
 	%sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
 
  
- X(1)=spaceOnEdge+diameterEachDot/2;
- Y(1)=X(1);
+	 X(1)=spaceOnEdge+diameterEachDot/2;
+	 Y(1)=X(1);
  
- for(j=2:15)
-	X(j)=X(j-1)+diameterEachDot/2+spacebetweenEdgeTwoDots+diameterEachDot/2;
-	Y(j)=X(j);
- endfor 
+	for(j=2:15)
+		X(j)=X(j-1)+diameterEachDot/2+spacebetweenEdgeTwoDots+diameterEachDot/2;
+		Y(j)=X(j);
+	endfor 
  
 	X=[X X X X X X X X X X X X X X X];
 	Y=[Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y'];
 	X=reshape(X,225,1);
 	Y=sort(reshape(Y,225,1));
 	
-	
+	%-----------------inverse matrice 2d --------------------
 
-%-----------------inverse matrice 2d --------------------
+	camera1 = uv;
+	%paramètres
+	%Z=zeros(rows(Y),1);
+	u=camera1(:,end-1);
+	v=camera1(:,end);
 
-camera1 = uv;
-%paramètres
-%Z=zeros(rows(Y),1);
-u=camera1(:,end-1);
-v=camera1(:,end);
+	% ---- création de la matrice A ---
+	% produits des matrices u par XY puis on les exprime en négatifs
+	muX= -u.*X;
+	muY= -u.*Y;
+	mvX= -v.*X;
+	mvY= -v.*Y;
+	nbRows=rows(camera1);
 
-% ---- création de la matrice A ---
-% produits des matrices u par XY puis on les exprime en négatifs
-muX= -u.*X;
-muY= -u.*Y;
-mvX= -v.*X;
-mvY= -v.*Y;
-nbRows=rows(camera1);
-
-matA = [X Y ones(nbRows,1)*[1 0 0 0] muX  muY  ];
-matA= [ matA ; ones(nbRows,1)*[0 0 0] X Y ones(nbRows,1) mvX  mvY ]; 
+	matA = [X Y ones(nbRows,1)*[1 0 0 0] muX  muY  ];
+	matA= [ matA ; ones(nbRows,1)*[0 0 0] X Y ones(nbRows,1) mvX  mvY ]; 
 
 
-% ------------ matrice B ----------- 
- matB = [u;v];
+	% ------------ matrice B ----------- 
+	matB = [u;v];
 
 
-% ---------- Calcul matrice M d'apres AM=B soit M=B* (A à la puissance moins 1)
- M = pinv(matA)*matB;
-%passage d'une matrice 11,1 en matrice 4,3 en ajoutant m34=1
- M = reshape([M;1],3,3)';
-% norme des trois colonnes de la troisieme ligne de M
- norm_r3= norm(M(3,1:3));
-%On divise M par cette norme pour obtenir la position de chaque point de M 
- M/=norm_r3;
+	% ---------- Calcul matrice M d'apres AM=B soit M=B* (A à la puissance moins 1)
+	M = pinv(matA)*matB;
+	%passage d'une matrice 11,1 en matrice 4,3 en ajoutant m34=1
+	M = reshape([M;1],3,3)';
+	% norme des trois colonnes de la troisieme ligne de M
+	norm_r3= norm(M(3,1:3));
+	%On divise M par cette norme pour obtenir la position de chaque point de M 
+	M/=norm_r3;
 
- uv = M*[X Y ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
- uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
+	uv = M*[X Y ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
+	uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
 	% affichage  des vecteurs u et v 
-   figure(10)
-   grid on;
-   
-   subplot(211);
-   plot(u,v,'+;"u et v";', uv(:,1),uv(:,2),'s;"u\&v calcules";');
-   legend boxoff 
-   legend Location NorthOutside 
+	figure(10)
+	grid on;
 
-   subplot(223);
-   plot(uv(:,1)-u,'o;"erreur entre les deux u";');  % pour observer l'erreur de positionnement de chaque points
-   legend boxoff 
-   legend Location NorthOutside  
-   
-   subplot(224);
-   plot(uv(:,2)-v,'o;"erreur des deux v";');  % pour observer l'erreur de positionnement de chaque points
-   legend boxoff 
-   legend Location NorthOutside 
- drawnow
+	subplot(211);
+	plot(u,v,'+;"u et v";', uv(:,1),uv(:,2),'s;"u\&v calcules";');
+	legend boxoff 
+	legend Location NorthOutside 
+
+	subplot(223);
+	plot(uv(:,1)-u,'o;"erreur entre les deux u";');  % pour observer l'erreur de positionnement de chaque points
+	legend boxoff 
+	legend Location NorthOutside  
+
+	subplot(224);
+	plot(uv(:,2)-v,'o;"erreur des deux v";');  % pour observer l'erreur de positionnement de chaque points
+	legend boxoff 
+	legend Location NorthOutside 
+	drawnow
 	
 %distorsion----------------------------------------------
 
