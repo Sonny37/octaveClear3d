@@ -23,8 +23,6 @@ function [M] = CalibMire2d(X,Y, uv)
 %-----------------inverse matrice 2d --------------------
 
 camera1 = uv;
-
-
 %paramètres
 %Z=zeros(rows(Y),1);
 u=camera1(:,end-1);
@@ -58,7 +56,7 @@ matA= [ matA ; ones(nbRows,1)*[0 0 0] X Y ones(nbRows,1) mvX  mvY ];
  uv = M*[X Y ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
  uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
 	% affichage  des vecteurs u et v 
-   figure(1)
+   figure(10)
    grid on;
    
    subplot(211);
@@ -92,7 +90,7 @@ vars{3}=[ones(rows(u), 1) u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (
 string{1}="polynomeFull";
 string{2}="polynomeSans1";
 string{3}="polynomeSansu_et_v";
-
+disp("k\terrU\terrV")
 for k=1:3
 	cdu=vars{k}\deltaU; 
 	cdv=vars{k}\deltaV;
@@ -100,12 +98,13 @@ for k=1:3
 	vCorrige=vars{k}*cdv;
 	errU{k}=std(uv(:,1)-u-uCorrige); %erreur standard
 	errV{k}=std(uv(:,2)-v-vCorrige);
-	%save ('-text',['MatrixCam' '_' num2str(posCam) '_StdError_pol' string{k} '.txt'], "errU", "errV"); 
+	%save ('-text',['MatrixCam' '_' num2str(posCam) '_StdError_pol' string{k} '.txt'], "errU", "errV");
+	[k errU{k} errV{k}] 
 endfor
-disp('k\terrU\terrV')
-disp(num2str(k) num2str(errU) num2str(errV));
 
-	figure(2)
+
+
+	%figure(2)
 % h1=plot(allerrU(1,:));	set(h1,"color",colormap(rand(10,3)));	hold on;
 % h2=plot(allerrU(2,:));	set(h2,"color",colormap(rand(10,3)));	hold on;
 % h3=plot(allerrU(3,:));	set(h3,"color",colormap(rand(10,3)));	hold on;
