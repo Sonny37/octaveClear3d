@@ -1,9 +1,21 @@
-function [M] = CalibMire2d(X,Y, uv)
+function [M] = CalibMire2d
 
-%setup coordonnées
- spaceOnEdge=1.6774647887324;
- spacebetweenEdgeTwoDots=4.193661971831;
- diameterEachDot=3.3544995774648;
+ spaceOnEdge=1.6774647887324; 						%1mm 
+ spacebetweenEdgeTwoDots=4.193661971831;			%2,5mm
+ diameterEachDot=3.3544995774648;					%2mm
+ 
+ 
+%récupération de l'image
+I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
+nxy=[15 15]; %225 pts en 15 par 15
+ws=4;% valeur exacte 4.19....
+
+%localisation de l'image
+[uv,uv_interp,uv0]=locate_grid4pt(I,nxy,ws);
+
+%setup coordonnées (en pixels) : 
+	%sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
+
  
  X(1)=spaceOnEdge+diameterEachDot/2;
  Y(1)=X(1);
