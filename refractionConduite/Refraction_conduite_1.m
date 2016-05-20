@@ -1,12 +1,37 @@
 function [hk, hrk1, hrk2,R2]=Refraction_conduite_1(iterations)
-%iterations=50;
-% compute refraction of light rays from an external camera
-% to a vertical plane inside a water filled PMMA duct
+%function [hk, hrk1, hrk2,R2]=Refraction_conduite_1(iterations)
+%
+% Compute refraction of light rays from an external camera to a vertical plane inside a water filled PMMA duct
 % 2 cases:
 %  1-duct of outer radius R1 and inner radius R2
 %  2-duct of outer edge 2D (square section) and inner radius R2
+%
+% INPUT
+	% iterations number of time where we increase the height of the light ray and the refracted points
+%
+	% OUTPUT
+% hk hauteurs à chaque itération du rayon lumineux 
+% hrk1 (cas 1) position en ordonnées du point P3 entre 0 et R2 dans le cercle
+% hrk2 (cas 2) position en ordonnées du point P3 entre 0 et R2 dans le cercle  
+% R2 rayon interne de la conduite	
+%
+% Évalue les trajectoires de rayon lumineux depuis une camera externe 
+% vers un plan vertical présent au sein d'une conduite en plexiglas remplie d'eau
+%  2 cas d'études:
+	%1 conduite cylindrique avec un rayon externe R1 et interne R2
+	% 1 conduite cylindrique mais avec une extrémité rectangulaire de coté D et un rayon interne R2
+%
+% INPUT
+	% itérations : augmentation jusqu'à un certain nombre de la hauteur du rayon lumineux et des points réfractés par la conduite
+% OUTPUT
+% hk :light ray heights
+% hrk1 :(cas 1) ordinate position of P3 in the circle
+% hrk2 :(cas 2) ordinate position of P3 in the circle
+% R2 : internal ray of duct
 
-%refraction indexes
+
+
+% indexs de réfraction 
 nH2O=1.33; %water
 nPMMA=1.51;%PMMA
 nair=1;

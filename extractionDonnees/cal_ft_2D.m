@@ -12,7 +12,7 @@ if ncoord~=4
  error('cal_ft_2D : data must be of the form [ui vi Xi Yi]');
 end
 
-if nargin<2 %?
+if nargin<2 %retourne le nombre d'arguments d'entrée passés lors de l'appel à cette fonction. Permet par exemple de donner des valeurs par défaut aux paramètres d'entrée manquant. Utile sous Octave pour tester si le nombre de paramètres passés par l'utilisateur à la fonction est bien celui attendu par la fonction 
  kuv=[1 1];
 end
 if prod(size(kuv))==1

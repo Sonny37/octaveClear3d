@@ -1,5 +1,21 @@
-%polynomialOrder, nCase, hrk1, hrk2, h, iterations, echantillons
-function [p, e, eStd] = fitRefracted(hk,hrk1, hrk2, R2, polynomialOrder, iterations, cpt)%polynomialOrder, nCase, hrk1, hrk2, h, iterations, echantillons
+function [p, e, eStd] = fitRefracted(hk,hrk1, hrk2, R2, polynomialOrder, iterations, cpt)
+%function [p, e, eStd] = fitRefracted(hk,hrk1, hrk2, R2, polynomialOrder, iterations, cpt)
+%
+%polynomial interpolation for two different refracted ducts given appropriate height
+%
+%INPUT
+% hk :light ray heights
+% hrk1 :(cas 1) ordinate position of P3 in the circle
+% hrk2 :(cas 2) ordinate position of P3 in the circle
+% R2 : internal ray of duct
+% polynomialOrder : polynomial order to fit the standard error
+% iterations : parameter to give information wen saving errors figure 
+% cpt  : counter used ifor repeating his function with various order of polynome and for figure numbers 
+%OUTPUT
+% p : polynome
+% e : matrix of errors between hrk1 & hk1
+% eStd : standard errors of efit and e , where efit is he evaluated polynome
+
 
 	i1=find((hrk1 <= R2) & (hrk1 != NaN));
 	i2=find((hrk2 <= R2) & (hrk2 != NaN));

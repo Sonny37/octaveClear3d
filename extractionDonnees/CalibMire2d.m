@@ -1,5 +1,14 @@
 function [M] = CalibMire2d
-
+%function [M] = CalibMire2d
+%this function determine the matrice from using picture point detection
+% It output a matrix from the AM= B product, given by u and v coordinates and X,Y real coordinates
+	%valable pour une la première image prise de face
+	
+%INPUT
+	%M : 3x3 matrix corresponding to the eight coefficients of the M matrix which will help position camera
+	
+%2016-05-20 V.ROUILLÉ L.CHATELLIER
+	
 	spaceOnEdge=1.6774647887324; 						%1mm 
 	spacebetweenEdgeTwoDots=4.193661971831;			%2,5mm
 	diameterEachDot=3.3544995774648;					%2mm
@@ -22,7 +31,7 @@ function [M] = CalibMire2d
 	nxy=[15 15]; %225 pts en 15 par 15
 	ws=32;% valeur exacte 4.19px....
 
-%localisation de l'imageM
+%localisation de l'image
 figure
 [uv,uv_interp,uv0]=locate_grid4pt(-I,nxy,ws);
 
