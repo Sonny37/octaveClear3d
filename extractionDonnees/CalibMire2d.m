@@ -22,18 +22,23 @@ function [M] = CalibMire2d
 			, double(imread('mire2D8TE/11502003-2016-05-17-182628.tif'))
 			, double(imread('mire2D8TE/11502003-2016-05-17-182659.tif'))
 			, double(imread('cam1_z000.tif'))};
+			
+	imageWater=double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-165246.tif'));
 			 
-	n=input("Choix de l\'image : 1 2 3 4 5 6 ou 7\n ");
+	%n=input("Choix de l\'image : 1 2 3 4 5 6 ou 7\n ");
 	
 %for(n=1:7)
-	I=images{n};
+	%I=images{n};
 %	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
+	I=imageWater; n=1;
 	nxy=[15 15]; %225 pts en 15 par 15
 	ws=32;% valeur exacte 4.19px....
 
 %localisation de l'image
 figure
-[uv,uv_interp,uv0]=locate_grid4pt(-I,nxy,ws);
+for a=3
+	[uv(a),uv_interp(a),uv0(a)]=locate_grid4pt(-I,nxy,ws,3,a);
+endfor
 
 %setup coordonnées (en pixels) : 
 	%sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
@@ -76,11 +81,11 @@ figure
 	matB = [u;v];
 
 
-	% ---------- Calcul matrice M d'apres AM=B soit M=B* (A à la puissance moins 1)
+	% ---------- Calcul matrice M d'après AM=B soit M=B* (A à la puissance moins 1)
 	M = pinv(matA)*matB;
 	%passage d'une matrice 11,1 en matrice 4,3 en ajoutant m34=1
 	M = reshape([M;1],3,3)';
-	% norme des trois colonnes de la troisieme ligne de M
+	% norme des trois colonnes de la troisième ligne de M
 	norm_r3= norm(M(3,1:3));
 	%On divise M par cette norme pour obtenir la position de chaque point de M 
 	M/=norm_r3;
