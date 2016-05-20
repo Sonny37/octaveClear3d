@@ -15,17 +15,21 @@ function [M] = CalibMire2d
 			, double(imread('cam1_z000.tif'))};
 			 
 	n=input("Choix de l\'image : 1 2 3 4 5 6 ou 7\n ");
+	
+%for(n=1:7)
 	I=images{n};
+%	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
 	nxy=[15 15]; %225 pts en 15 par 15
-	ws=4;% valeur exacte 4.19....
+	ws=32;% valeur exacte 4.19px....
 
-%localisation de l'image
-[uv,uv_interp,uv0]=locate_grid4pt(I,nxy,ws);
+%localisation de l'imageM
+figure
+[uv,uv_interp,uv0]=locate_grid4pt(-I,nxy,ws);
 
 %setup coordonnées (en pixels) : 
 	%sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
-
- 
+	 Y=0;
+	 X=0;
 	 X(1)=spaceOnEdge+diameterEachDot/2;
 	 Y(1)=X(1);
  
@@ -33,7 +37,7 @@ function [M] = CalibMire2d
 		X(j)=X(j-1)+diameterEachDot/2+spacebetweenEdgeTwoDots+diameterEachDot/2;
 		Y(j)=X(j);
 	endfor 
- 
+	
 	X=[X X X X X X X X X X X X X X X];
 	Y=[Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y'];
 	X=reshape(X,225,1);
@@ -75,7 +79,7 @@ function [M] = CalibMire2d
 	uv = M*[X Y ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
 	uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
 	% affichage  des vecteurs u et v 
-	figure(10)
+	figure(2*n)
 	grid on;
 
 	subplot(211);
@@ -94,6 +98,7 @@ function [M] = CalibMire2d
 	legend Location NorthOutside 
 	drawnow
 	
+%distorsion----------------------------------------------
 %distorsion----------------------------------------------
 
 %évaluation de la distorsion de l'inversion de matrice
@@ -121,7 +126,7 @@ for k=1:3
 	[k errU{k} errV{k}] 
 endfor
 
-
+%endfor
 
 	%figure(2)
 % h1=plot(allerrU(1,:));	set(h1,"color",colormap(rand(10,3)));	hold on;
