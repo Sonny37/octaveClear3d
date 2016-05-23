@@ -34,10 +34,6 @@ calib_mire_2d/images ecarts val departs et calc/3en1/ecartsCam1dn.png
 calib_mire_2d/images ecarts val departs et calc/3en1/ecartsCam1up.png
 extractionDonnees/cam1_z000.tif
 extractionDonnees/essaiMireVueFace.PNG
-extractionDonnees/interp_bilin.m
-extractionDonnees/invMatCalibMire2d.m
-extractionDonnees/locate_grid4pt.m
-extractionDonnees/locate_refine.m
 extractionDonnees/mire2D8TE/11502003-2016-05-17-182355.tif
 extractionDonnees/mire2D8TE/11502003-2016-05-17-182524.tif
 extractionDonnees/mire2D8TE/11502003-2016-05-17-182545.tif
@@ -104,3 +100,10 @@ extractionDonnees/mire2D8TE/20-05-16/11502003-2016-05-20-165140.tif
 extractionDonnees/mire2D8TE/20-05-16/11502003-2016-05-20-165215.tif
 extractionDonnees/mire2D8TE/20-05-16/11502003-2016-05-20-165246.tif
 extractionDonnees/mire2D8TE/20-05-16/Thumbs.db
+extractionDonnees/Nouveau dossier/Water/1ere partie.PNG
+extractionDonnees/Nouveau dossier/Water/2e partie.PNG
+extractionDonnees/Nouveau dossier/Water/3e partie.PNG
+extractionDonnees/Nouveau dossier/Water/data.PNG
+extractionDonnees/Nouveau dossier/Water/errStd.PNG
+extractionDonnees/Nouveau dossier/Water/reconstruction et ecarts.PNG
+extractionDonnees/Nouveau dossier/Water/wx wy u v .PNG

@@ -1,4 +1,4 @@
-function [M] = CalibMire2d
+function [M] = CalibMire2d_0
 %function [M] = CalibMire2d
 %this function determine the matrice from using picture point detection
 % It output a matrix from the AM= B product, given by u and v coordinates and X,Y real coordinates
@@ -29,23 +29,21 @@ function [M] = CalibMire2d
 	
 %for(n=1:7)
 	%I=images{n};
-%	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
-	I=imageWater; n=1;
+	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
+%	I=imageWater; n=1;
 	nxy=[15 15]; %225 pts en 15 par 15
 	ws=32;% valeur exacte 4.19px....
 
 %localisation de l'image
-for a=1:3
-	[uv,uv_interp,uv0]=locate_grid4pt(-I,nxy,ws,3,a);
-     temp1{a}=uv;
-     temp2{a}=uv_interp;
-     temp3{a}=uv0;
-endfor
-uv=[temp1{1} ;temp1{2} ;temp1{3}];
-uv_interp=[temp2{1}; temp2{2}; temp2{3}];
-uv0=[temp3{1}; temp3{2}; temp3{3}];
-%--------------------------------------------
-
+%for a=1:3
+	[uv,uv_interp,uv0]=locate_grid4pt_0(-I,nxy,ws);
+%     temp1{a}=uv;
+%     temp2{a}=uv_interp;
+%     temp3{a}=uv0;
+%endfor
+%uv=[temp1{1} temp1{2} temp1{3}];
+%uv_interp=[temp2{1} temp2{2} temp2{3}];
+%uv0=[temp3{1} temp3{2} temp3{3}];
 %setup coordonnées (en pixels) : 
 	%sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
 	 Y=0;
