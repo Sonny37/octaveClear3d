@@ -45,23 +45,39 @@ uv=[temp1{1} ;temp1{2} ;temp1{3}];
 uv_interp=[temp2{1}; temp2{2}; temp2{3}];
 uv0=[temp3{1}; temp3{2}; temp3{3}];
 %--------------------------------------------
+   Y=0;
+	 X=0;
 
 %setup coordonnées (en pixels) : 
 	%sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
-	 Y=0;
-	 X=0;
+	 
 	 X(1)=spaceOnEdge+diameterEachDot/2;
 	 Y(1)=X(1);
- 
-	for(j=2:15)
-		X(j)=X(j-1)+diameterEachDot/2+spacebetweenEdgeTwoDots+diameterEachDot/2;
-		Y(j)=X(j);
-	endfor 
+
+% si une grille de 15 -------------------------------
+%	for(j=2:15)
+%		X(j)=X(j-1)+diameterEachDot/2+spacebetweenEdgeTwoDots+diameterEachDot/2;
+%		Y(j)=X(j);
+%	endfor 
 	
-	X=[X X X X X X X X X X X X X X X];
-	Y=[Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y' Y'];
-	X=reshape(X,225,1);
-	Y=sort(reshape(Y,225,1));
+ %si une grille de 5*3 = 15 ==> 5X sur 15Y *3 -------------------------------
+    for j=2:15
+        Y(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
+        X(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
+    endfor
+    X1=repmat(X(1,1:5),15,1);
+    X2=repmat(X(1,6:10),15,1);
+    X3=repmat(X(1,11:15),15,1);
+    
+    X1=reshape(X1,75,1);
+    X2=reshape(X2,75,1);
+    X3=reshape(X3,75,1);
+    
+    X=[X1;X2;X3]
+    
+    Y1=repmat(Y,1,5);
+    Y1=reshape(Y1,75,1);
+    Y=repmat(Y1,3,1);
 	
 	%-----------------inverse matrice 2d --------------------
 
@@ -99,7 +115,7 @@ uv0=[temp3{1}; temp3{2}; temp3{3}];
 	uv = M*[X Y ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
 	uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
 	% affichage  des vecteurs u et v 
-	figure(2*n)
+	figure
 	grid on;
 
 	subplot(211);
