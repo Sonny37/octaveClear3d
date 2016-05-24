@@ -23,27 +23,36 @@ function [M] = CalibMire2d
 			, double(imread('mire2D8TE/11502003-2016-05-17-182659.tif'))
 			, double(imread('cam1_z000.tif'))};
 			
-	imageWater=double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-165246.tif'));
+	imageWater={double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-163747.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-163930.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164000.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164130.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164218.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164255.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164310.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164355.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-165140.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-165215.tif'))
+        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-165246.tif'))};
 			 
-	%n=input("Choix de l\'image : 1 2 3 4 5 6 ou 7\n ");
-	
-%for(n=1:7)
+	%for(n=1:7)
 	%I=images{n};
-%	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
-	I=imageWater; n=1;
-	nxy=[15 15]; %225 pts en 15 par 15
-	ws=32;% valeur exacte 4.19px....
+    %	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
+	n=randi(11,1);
+  I=imageWater{2}; 
+	nxy=[15 15];  %225 pts en 15 par 15
+	ws=32;        % valeur exacte 4.19px....
 
 %localisation de l'image
 for a=1:3
-	[uv,uv_interp,uv0]=locate_grid4pt(-I,nxy,ws,3,a);
+    [uv,uv_interp,uv0]=locate_grid4pt(-I,nxy,ws,3,a);
      temp1{a}=uv;
      temp2{a}=uv_interp;
      temp3{a}=uv0;
 endfor
-uv=[temp1{1} ;temp1{2} ;temp1{3}];
-uv_interp=[temp2{1}; temp2{2}; temp2{3}];
-uv0=[temp3{1}; temp3{2}; temp3{3}];
+    uv=[temp1{1} ;temp1{2} ;temp1{3}];
+    uv_interp=[temp2{1}; temp2{2}; temp2{3}];
+    uv0=[temp3{1}; temp3{2}; temp3{3}];
 %--------------------------------------------
    Y=0;
 	 X=0;
@@ -73,7 +82,7 @@ uv0=[temp3{1}; temp3{2}; temp3{3}];
     X2=reshape(X2,75,1);
     X3=reshape(X3,75,1);
     
-    X=[X1;X2;X3]
+    X=[X1;X2;X3];
     
     Y1=repmat(Y,1,5);
     Y1=reshape(Y1,75,1);
@@ -110,7 +119,8 @@ uv0=[temp3{1}; temp3{2}; temp3{3}];
 	% norme des trois colonnes de la troisième ligne de M
 	norm_r3= norm(M(3,1:3));
 	%On divise M par cette norme pour obtenir la position de chaque point de M 
-	M/=norm_r3;
+	M=M/sqrt(sum(M(3,1:2).^2));
+  %M/=norm_r3;
 
 	uv = M*[X Y ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
 	uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
@@ -135,8 +145,6 @@ uv0=[temp3{1}; temp3{2}; temp3{3}];
 	drawnow
 	
 %distorsion----------------------------------------------
-%distorsion----------------------------------------------
-
 %évaluation de la distorsion de l'inversion de matrice
 
 deltaU=(uv(:,1)-u);
@@ -144,14 +152,15 @@ deltaV=(uv(:,2)-v);
 %u v uv u² v² u²v v²u u^3 v^3 u^3*v u²v² uv^3
 
 vars{1}=[ones(rows(u), 1) u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3)];
-vars{2}=[u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3)];
-vars{3}=[ones(rows(u), 1) u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3) ];
+%vars{2}=[u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3)];
+%vars{3}=[ones(rows(u), 1) u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3) ];
 
 string{1}="polynomeFull";
-string{2}="polynomeSans1";
-string{3}="polynomeSansu_et_v";
+%string{2}="polynomeSans1";
+%string{3}="polynomeSansu_et_v";
 disp("k\terrU\terrV")
-for k=1:3
+k=1;
+%for k=1:3
 	cdu=vars{k}\deltaU; 
 	cdv=vars{k}\deltaV;
 	uCorrige=vars{k}*cdu;
@@ -160,7 +169,7 @@ for k=1:3
 	errV{k}=std(uv(:,2)-v-vCorrige);
 	%save ('-text',['MatrixCam' '_' num2str(posCam) '_StdError_pol' string{k} '.txt'], "errU", "errV");
 	[k errU{k} errV{k}] 
-endfor
+%endfor
 
 %endfor
 

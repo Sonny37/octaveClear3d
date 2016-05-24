@@ -35,17 +35,17 @@ for k=1:4
     [u0(k),v0(k)]=ginput(1);
     set(h,'xdata',u0,'ydata',v0);
     drawnow
-end
-set(h,'xdata',u0([1:end 1]),'ydata',v0([1:end 1])); %retrace tout l contour ou juste entre le pt  1 et 4
+endfor
+
+set(h,'xdata',u0([1:end 1]),'ydata',v0([1:end 1])); 
 
 pause(.2)
-
 
 uv0=[u0 v0]
 
 if prod(size(nxy))==1
  nxy=nxy([1 1]);
-end
+endif
 
 data{1} =[u0 v0 [0;(2/7);(2/7);0] [0;0;1;1]];
 data{2} =[u0 v0 [25/70;45/70;45/70;25/70] [0;0;1;1]];
@@ -54,22 +54,25 @@ M2D=cal_ft_2D(data{a})
 
 nx=nxy(1)-1;
 ny=nxy(2)-1;
+
 [X,Y]=meshgrid([0+5*(a-1):nx/amax+5*(a-1)]/nx,[0:ny]/ny);
+
 uv_interp=(M2D*[X(:) Y(:) ones(prod(nxy)/amax,1)]')';
 uv_interp=uv_interp(:,1:2)./uv_interp(:,[3 3]);
-uv_interp(1:5,:)
+
+uv_interp(1:5,:) %pour voir si la matrice a des valeurs + ou -
 
 uv=locate_refine(uv_interp,double(I)',ws);
-
 
 hold on;
 h1=plot(u0,v0,'xb');
 h2=plot(uv_interp(:,1),uv_interp(:,2),'+g');
 h3=plot(uv(:,1),uv(:,2),'or');
+
 title('Detection result');
-if(a==1)
-    legend(h3,{'selected markers','interpolated grid','detected markers'});
-endif
+%if(a==1)
+ %   legend([h1:h3],{'selected markers','interpolated grid','detected markers'});
+%endif
 hold on;
 
 endfunction
