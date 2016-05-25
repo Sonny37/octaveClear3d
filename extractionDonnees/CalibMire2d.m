@@ -149,25 +149,7 @@
 	uv = M*[XX YY ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
 	uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
 	% affichage  des vecteurs u et v 
-	figure
-	grid on;
-
-	subplot(211);
-	plot(u,v,'+;"u et v";', uv(:,1),uv(:,2),'s;"u\&v calcules";');
-	legend boxoff 
-	legend Location NorthOutside 
-
-	subplot(223);
-	plot(uv(:,1)-u,'o;"erreur entre les deux u";');  % pour observer l'erreur de positionnement de chaque points
-	legend boxoff 
-	legend Location NorthOutside  
-
-	subplot(224);
-	plot(uv(:,2)-v,'o;"erreur des deux v";');  % pour observer l'erreur de positionnement de chaque points
-	legend boxoff 
-	legend Location NorthOutside 
-	drawnow
-	
+		
 %distorsion----------------------------------------------
 %évaluation de la distorsion de l'inversion de matrice
 
@@ -183,25 +165,32 @@ string{1}="polynomeFull";
 %string{2}="polynomeSans1";
 %string{3}="polynomeSansu_et_v";
 disp("k\terrU\terrV")
-k=1;
-%for k=1:3
-	cdu=vars{k}\deltaU; 
+	k=1;
+  cdu=vars{k}\deltaU; %coefs
 	cdv=vars{k}\deltaV;
-	uCorrige=vars{k}*cdu;
+	uCorrige=vars{k}*cdu; 
 	vCorrige=vars{k}*cdv;
 	errU{k}=std(uv(:,1)-u-uCorrige); %erreur standard
 	errV{k}=std(uv(:,2)-v-vCorrige);
-	%save ('-text',['MatrixCam' '_' num2str(posCam) '_StdError_pol' string{k} '.txt'], "errU", "errV");
 	[k errU{k} errV{k}] 
-%endfor
 
-%endfor
+  figure
+	grid on;
 
-	%figure(2)
-% h1=plot(allerrU(1,:));	set(h1,"color",colormap(rand(10,3)));	hold on;
-% h2=plot(allerrU(2,:));	set(h2,"color",colormap(rand(10,3)));	hold on;
-% h3=plot(allerrU(3,:));	set(h3,"color",colormap(rand(10,3)));	hold on;
-% h4=plot(allerrU(4,:));	set(h4,"color",colormap(rand(10,3)));
-	
+	subplot(211);
+	plot(uv(:,1),uv(:,2),'og;"points calcules";',u+uCorrige,v+vCorrige,'xb;"poins corriges";', u, v, 'sr;"points initiaux";');
+	legend boxoff 
+	legend Location NorthOutside 
+
+	subplot(223);
+	plot(uv(:,1)-u,'o;"erreur entre les deux u";');  % pour observer l'erreur de positionnement de chaque points
+	legend boxoff 
+	legend Location NorthOutside  
+
+	subplot(224);
+	plot(uv(:,2)-v,'o;"erreur des deux v";');  % pour observer l'erreur de positionnement de chaque points
+	legend boxoff 
+	legend Location NorthOutside 
+	drawnow
 
  %  endfunction
