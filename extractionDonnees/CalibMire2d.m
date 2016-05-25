@@ -88,6 +88,29 @@ endfor
     Y1=reshape(Y1,75,1);
     Y=repmat(Y1,3,1);
 	
+    case 2 %----- méthode 2 --------
+        clf;
+        imagesc(im);
+        # cliquer un marqueur au centre de l'image, 
+        # puis son voisin selon x et son voisin selon y pour créer un repère 
+        # Oxy (cf points verts sur la figure jointe)
+        [px,py]=ginput(3) 
+        %2[X,Y,I,J,C,imref,immarker,imorg,im00]=locate(-im,round([py,px]),.7);
+        [X,Y,I,J,C,imref,immarker,imorg,im00]=locate2(-im,round([py,px]),.7);
+
+        clf;
+        imagesc(im);
+        hold on;
+        plot(px,py,'og',X,Y,'*r');
+        colormap gray
+        %definir zone d'exclusion pour éliminer les points parasites.
+        
+   uv=[X Y];
+   XX=[I*5]
+   YY=[J*5]
+    otherwise
+    %do nothing
+    endswitch
 	%-----------------inverse matrice 2d --------------------
 
 	camera1 = uv;
