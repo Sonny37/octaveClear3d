@@ -1,4 +1,4 @@
-function [M] = CalibMire2d
+%
 %function [M] = CalibMire2d
 %this function determine the matrice from using picture point detection
 % It output a matrix from the AM= B product, given by u and v coordinates and X,Y real coordinates
@@ -205,4 +205,4 @@ k=1;
 % h4=plot(allerrU(4,:));	set(h4,"color",colormap(rand(10,3)));
 	
 
-   endfunction
+ %  endfunction
