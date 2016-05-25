@@ -123,20 +123,19 @@
 
 	% ---- création de la matrice A ---
 	% produits des matrices u par XY puis on les exprime en négatifs
-	muX= -u.*X;
-	muY= -u.*Y;
-	mvX= -v.*X;
-	mvY= -v.*Y;
+	muX= -u.*XX;
+	muY= -u.*YY;
+	mvX= -v.*XX;
+	mvY= -v.*YY;
 	nbRows=rows(camera1);
 
-	matA = [X Y ones(nbRows,1)*[1 0 0 0] muX  muY  ];
-	matA= [ matA ; ones(nbRows,1)*[0 0 0] X Y ones(nbRows,1) mvX  mvY ]; 
+	matA = [XX YY ones(nbRows,1)*[1 0 0 0] muX  muY  ];
+	matA= [ matA ; ones(nbRows,1)*[0 0 0] XX YY ones(nbRows,1) mvX  mvY ]; 
 
 
 	% ------------ matrice B ----------- 
 	matB = [u;v];
-
-
+  
 	% ---------- Calcul matrice M d'après AM=B soit M=B* (A à la puissance moins 1)
 	M = pinv(matA)*matB;
 	%passage d'une matrice 11,1 en matrice 4,3 en ajoutant m34=1
@@ -147,7 +146,7 @@
 	M=M/sqrt(sum(M(3,1:2).^2));
   %M/=norm_r3;
 
-	uv = M*[X Y ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
+	uv = M*[XX YY ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
 	uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
 	% affichage  des vecteurs u et v 
 	figure
