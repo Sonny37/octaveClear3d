@@ -42,52 +42,54 @@ function [M] = CalibMire2d
   im=double(imread(imageWater{n})); 
 	nxy=[15 15];  %225 pts en 15 par 15
 	ws=32;        % valeur exacte 4.19px....
-
-%localisation de l'image
-for a=1:3
-    [uv,uv_interp,uv0]=locate_grid4pt(-I,nxy,ws,3,a);
-     temp1{a}=uv;
-     temp2{a}=uv_interp;
-     temp3{a}=uv0;
-endfor
-    uv=[temp1{1} ;temp1{2} ;temp1{3}];
-    uv_interp=[temp2{1}; temp2{2}; temp2{3}];
-    uv0=[temp3{1}; temp3{2}; temp3{3}];
-%--------------------------------------------
-   Y=0;
-	 X=0;
-
-%setup coordonnées (en pixels) : 
-	%sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
+  choixMethode = input("Methode de localisation des points\n1 - en grille 4 par 4\n2 - par iteration\nVotre choix : ");
+  
+    switch(choixMethode)
+    case 1  %----- méthode 1 --------
+            % localisation de l'image avec locate grid 4 pt ou 12 actuellmeent
+        for a=1:3
+            [uv,uv_interp,uv0]=locate_grid4pt(-im,nxy,ws,3,a);
+             temp1{a}=uv;
+             temp2{a}=uv_interp;
+             temp3{a}=uv0;  
+        endfor
+            uv=[temp1{1} ;temp1{2} ;temp1{3}];
+            uv_interp=[temp2{1}; temp2{2}; temp2{3}];
+            uv0=[temp3{1}; temp3{2}; temp3{3}];
+            
+        %setup coordonnées (en pixels) : 
+        %sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
 	 
-	 X(1)=spaceOnEdge+diameterEachDot/2;
-	 Y(1)=X(1);
+   
+   
+        %	 X(1)=spaceOnEdge+diameterEachDot/2;
+        %	 Y(1)=X(1);
 
-% si une grille de 15 -------------------------------
-%	for(j=2:15)
-%		X(j)=X(j-1)+diameterEachDot/2+spacebetweenEdgeTwoDots+diameterEachDot/2;
-%		Y(j)=X(j);
-%	endfor 
-	
- %si une grille de 5*3 = 15 ==> 5X sur 15Y *3 -------------------------------
-    for j=2:15
-        Y(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
-        X(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
-    endfor
-    X1=repmat(X(1,1:5),15,1);
-    X2=repmat(X(1,6:10),15,1);
-    X3=repmat(X(1,11:15),15,1);
-    
-    X1=reshape(X1,75,1);
-    X2=reshape(X2,75,1);
-    X3=reshape(X3,75,1);
-    
-    X=[X1;X2;X3];
-    
-    Y1=repmat(Y,1,5);
-    Y1=reshape(Y1,75,1);
-    Y=repmat(Y1,3,1);
-	
+        % si une grille de 15 -------------------------------
+        %	for(j=2:15)
+        %		X(j)=X(j-1)+diameterEachDot/2+spacebetweenEdgeTwoDots+diameterEachDot/2;
+        %		Y(j)=X(j);
+        %	endfor 
+          
+         %si une grille de 5*3 = 15 ==> 5X sur 15Y *3 -------------------------------
+            
+        for j=2:15
+            Y(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
+            X(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
+        endfor
+        X1=repmat(X(1,1:5),15,1);
+        X2=repmat(X(1,6:10),15,1);
+        X3=repmat(X(1,11:15),15,1);
+        
+        X1=reshape(X1,75,1);
+        X2=reshape(X2,75,1);
+        X3=reshape(X3,75,1);
+            
+        X=[X1;X2;X3];
+        
+        Y1=repmat(Y,1,5);
+        Y1=reshape(Y1,75,1);
+        Y=repmat(Y1,3,1);
     case 2 %----- méthode 2 --------
         clf;
         imagesc(im);
