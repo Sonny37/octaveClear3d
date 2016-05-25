@@ -15,31 +15,31 @@ function [M] = CalibMire2d
  
  
 %récupération de l'image
-	images={ double(imread('mire2D8TE/11502003-2016-05-17-182355.tif')) 
-			, double(imread('mire2D8TE/11502003-2016-05-17-182524.tif')) 
-			, double(imread('mire2D8TE/11502003-2016-05-17-182545.tif')) 
-			, double(imread('mire2D8TE/11502003-2016-05-17-182604.tif')) 
-			, double(imread('mire2D8TE/11502003-2016-05-17-182628.tif'))
-			, double(imread('mire2D8TE/11502003-2016-05-17-182659.tif'))
-			, double(imread('cam1_z000.tif'))};
+	image=['mire2D8TE/11502003-2016-05-17-182355.tif'
+  ;'mire2D8TE/11502003-2016-05-17-182524.tif' 
+  ;'mire2D8TE/11502003-2016-05-17-182545.tif' 
+  ;'mire2D8TE/11502003-2016-05-17-182604.tif' 
+  ;'mire2D8TE/11502003-2016-05-17-182628.tif'
+  ;'mire2D8TE/11502003-2016-05-17-182659.tif'
+  ;'cam1_z000.tif'];
 			
-	imageWater={double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-163747.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-163930.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164000.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164130.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164218.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164255.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164310.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-164355.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-165140.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-165215.tif'))
-        ,double(imread('mire2D8TE/20-05-16/11502003-2016-05-20-165246.tif'))};
-			 
+	imageWater=['mire2D8TE/20-05-16/11502003-2016-05-20-163747.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-163930.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164000.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164130.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164218.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164255.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164310.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164355.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-165140.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-165215.tif'
+        ;'mire2D8TE/20-05-16/11502003-2016-05-20-165246.tif'
+			  ;'mire2D8TE/20-05-16/11502003-2016-05-20-165246_sanscontour.tif'];
 	%for(n=1:7)
 	%I=images{n};
     %	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
-	n=randi(11,1);
-  I=imageWater{2}; 
+	n=randi(rows(imageWater),1);
+  im=double(imread(imageWater{n})); 
 	nxy=[15 15];  %225 pts en 15 par 15
 	ws=32;        % valeur exacte 4.19px....
 
