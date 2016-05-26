@@ -154,111 +154,100 @@ choixMethode = input("Methode de localisation des points\n1 - en grille 4 par 4\
     uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
     % affichage  des vecteurs u et v 
     
+    %distorsion----------------------------------------------
+    %évaluation de la distorsion de l'inversion de matrice
+    deltaU=(uv(:,1)-u);
+    deltaV=(uv(:,2)-v);
         
-        Y1=repmat(Y,1,5);
-        Y1=reshape(Y1,75,1);
-        Y=repmat(Y1,3,1);
-    case 2 %----- méthode 2 --------
-        clf;
-        imagesc(im);
-        # cliquer un marqueur au centre de l'image, 
-        # puis son voisin selon x et son voisin selon y pour créer un repère 
-        # Oxy (cf points verts sur la figure jointe)
-        [px,py]=ginput(3) 
-        %2[X,Y,I,J,C,imref,immarker,imorg,im00]=locate(-im,round([py,px]),.7);
-        [X,Y,I,J,C,imref,immarker,imorg,im00]=locate2(-im,round([py,px]),.7);
+    typeDistorsion = input("affichage :\n 1- erreurs simples \n2- erreurs avec reconstruction grille");
+    switch(typeDistorsion)
+    case 1    
+        
+        %1 u v uv u² v² u²v v²u u^3 v^3 u^3*v u²v² uv^3
+        Poly_uv=[ones(rows(u), 1) u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2 (u.*v.^3)];
+        
+        %vars{2}=[u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3)];
+        %vars{3}=[ones(rows(u), 1) u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3) ];
 
-        clf;
-        imagesc(im);
-        hold on;
-        plot(px,py,'og',X,Y,'*r');
-        colormap gray
-        %definir zone d'exclusion pour éliminer les points parasites.
+        string{1}="polynomeFull";
+        %string{2}="polynomeSans1";
+        %string{3}="polynomeSansu_et_v";
+        cdu=Poly_uv\deltaU; %coefs
+        cdv=Poly_uv\deltaV;
+        uCorrige=Poly_uv*cdu; 
+        vCorrige=Poly_uv*cdv;
+        errU=std(uv(:,1)-u-uCorrige); %erreur standard
+        errV=std(uv(:,2)-v-vCorrige);
         
-   uv=[X Y];
-   XX=[I*5]
-   YY=[J*5]
-    otherwise
-    %do nothing
+        a(n,:)=[errU errV];
+        
+        figure
+        grid on;
+        plot(uv(:,1),uv(:,2),'og;"points calcules";',u+uCorrige,v+vCorrige,'xb;"poins corriges";', u, v, 'sr;"points initiaux";');
+        folder=['iterate';'grid'];
+        saveas(gcf,['Nouveau dossier/Water/' folder(choixMethode) 'Method/Mire_' num2str(imageWater(n,strchr(imageWater(n,:), '-')(end)+1:end)) '_Reconstruction.png']);
+
+
+        figure % WITH SUBPLOTS AND DATA
+        title('Ecarts entre les coordonnees u et v avant et apres calibration')
+        subplot(231);
+        p1=plot(uv(:,1)-u,'ob');  % pour observer l'erreur de positionnement de chaque points
+
+        subplot(232);
+        p2=plot(uv(:,2)-v,'og');  % pour observer l'erreur de positionnement de chaque points
+
+        subplot(233);
+        p3=plot(u-uCorrige,'om');  % pour observer l'erreur de positionnement de chaque points
+
+        subplot(234);
+        p4=plot(v-vCorrige ,'or');  % pour observer l'erreur de positionnement de chaque points
+
+        subplot(235);
+        p5=plot(uv(:,1)-uCorrige ,'oc');  % pour observer l'erreur de positionnement de chaque points
+
+        subplot(236);
+        p6=plot(uv(:,2)-vCorrige ,'ok');  % pour observer l'erreur de positionnement de chaque points
+        %LEGEND WITH DATA FROM THE SUBPLOTS
+        hL = legend([p1,p2,p3,p4,p5,p6],{'u VS u calcule','v VS v calcule','u vs uCorrige','v vs vCorrige','u calcule vs uCorrige','v calcule vs vCorrige'});
+        % Programatically move the Legend to the center west
+        newPosition = [0.0001 0.46 0.1 0.1]; %[  posx, pos y,espace legende et texte legende, interligne legende]
+        newUnits = 'normalized';
+        set(hL,'Position', newPosition,'Units', newUnits);
+        %   SAVING FIGURE
+        saveas(gcf,['Nouveau dossier/Water/' folder(choixMethode) 'Method/Mire_' num2str(imageWater(n,strchr(imageWater(n,:), '-')(end)+1:end)) '_Ecarts.png']);
+%endfor
+
+    case 2
+    % Mesure de la resolution moyenne de l'image
+    imin=input("Veuillez entrez le pas de decalage mini et maxi pour chaque axes par rapport au point d\'origine. Ce pas de decalage doit etre pris a la derniere ligne ou colonne de points identifies en rouge, les lignes non visibles ou non identifiees ne devant pas etre prises en comptes:\n imin : ");
+    imax=input("imax = ");
+    jmin=input("jmin = ");
+    jmax=input("jmax = ");
+    
+    suv=M*[imin imax; jmin jmax; 1 1];
+    suv=suv(1:2,:)./suv([3;3],:);
+    resolution=sqrt(suv(2,1)-suv(1,1)^2+suv(2,2)-suv(1,2)^2);
+    
+   
+    %Création grille X Y à résolution imposée
+    [xg,yg]=meshgrid(-35:1/16:30,-35:1/16:35);
+    
+    % Projection de X Y vers u v 
+    suvg=M*[xg(:) yg(:) 0*xg(:)+1]';
+    ug=suvg(1,:)./suvg(3,:);
+    vg=suvg(2,:)./suvg(3,:);
+    
+    Ig=interp2(im,ug,vg);
+    Ig=reshape(Ig,size(xg));
+    imagesc(Ig);
+    % Correction de la distorsion uc et vc
+    Poly_uvg=[ones(rows(ug),1) ug vg ug.*vg (ug.^2) (vg.^2) (ug.^2).*vg ug.*(vg.^2) (ug.^3) (vg.^3) (ug.^3.*vg) ug.^2.*vg.^2 (ug.*vg.^3)];
+       
+    coefdeug=Poly_uvg\deltaU; %coefs
+    coefdevg=Poly_uvg\deltaV;
+    uCorrige=Poly_uvg*coefdeug; 
+    vCorrige=Poly_uvg*coefdevg;ug
+      
     endswitch
-	%-----------------inverse matrice 2d --------------------
-
-	camera1 = uv;
-	%paramètres
-	%Z=zeros(rows(Y),1);
-	u=camera1(:,end-1);
-	v=camera1(:,end);
-
-	% ---- création de la matrice A ---
-	% produits des matrices u par XY puis on les exprime en négatifs
-	muX= -u.*XX;
-	muY= -u.*YY;
-	mvX= -v.*XX;
-	mvY= -v.*YY;
-	nbRows=rows(camera1);
-
-	matA = [XX YY ones(nbRows,1)*[1 0 0 0] muX  muY  ];
-	matA= [ matA ; ones(nbRows,1)*[0 0 0] XX YY ones(nbRows,1) mvX  mvY ]; 
-
-
-	% ------------ matrice B ----------- 
-	matB = [u;v];
-  
-	% ---------- Calcul matrice M d'après AM=B soit M=B* (A à la puissance moins 1)
-	M = pinv(matA)*matB;
-	%passage d'une matrice 11,1 en matrice 4,3 en ajoutant m34=1
-	M = reshape([M;1],3,3)';
-	% norme des trois colonnes de la troisième ligne de M
-	norm_r3= norm(M(3,1:3));
-	%On divise M par cette norme pour obtenir la position de chaque point de M 
-	M=M/sqrt(sum(M(3,1:2).^2));
-  %M/=norm_r3;
-
-	uv = M*[XX YY ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
-	uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
-	% affichage  des vecteurs u et v 
-		
-%distorsion----------------------------------------------
-%évaluation de la distorsion de l'inversion de matrice
-
-deltaU=(uv(:,1)-u);
-deltaV=(uv(:,2)-v);
-%u v uv u² v² u²v v²u u^3 v^3 u^3*v u²v² uv^3
-
-vars{1}=[ones(rows(u), 1) u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3)];
-%vars{2}=[u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3)];
-%vars{3}=[ones(rows(u), 1) u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3) ];
-
-string{1}="polynomeFull";
-%string{2}="polynomeSans1";
-%string{3}="polynomeSansu_et_v";
-disp("k\terrU\terrV")
-	k=1;
-  cdu=vars{k}\deltaU; %coefs
-	cdv=vars{k}\deltaV;
-	uCorrige=vars{k}*cdu; 
-	vCorrige=vars{k}*cdv;
-	errU{k}=std(uv(:,1)-u-uCorrige); %erreur standard
-	errV{k}=std(uv(:,2)-v-vCorrige);
-	[k errU{k} errV{k}] 
-
-  figure
-	grid on;
-
-	subplot(211);
-	plot(uv(:,1),uv(:,2),'og;"points calcules";',u+uCorrige,v+vCorrige,'xb;"poins corriges";', u, v, 'sr;"points initiaux";');
-	legend boxoff 
-	legend Location NorthOutside 
-
-	subplot(223);
-	plot(uv(:,1)-u,'o;"erreur entre les deux u";');  % pour observer l'erreur de positionnement de chaque points
-	legend boxoff 
-	legend Location NorthOutside  
-
-	subplot(224);
-	plot(uv(:,2)-v,'o;"erreur des deux v";');  % pour observer l'erreur de positionnement de chaque points
-	legend boxoff 
-	legend Location NorthOutside 
-	drawnow
 
  %  endfunction
