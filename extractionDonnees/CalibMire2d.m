@@ -9,83 +9,151 @@
 	
 %2016-05-20 V.ROUILLÉ L.CHATELLIER
 	
-	spaceOnEdge=1.6774647887324; 						%1mm 
-	spacebetweenEdgeTwoDots=4.193661971831;			%2,5mm
-	diameterEachDot=3.3544995774648;					%2mm
- 
- 
-%récupération de l'image
-	image=['mire2D8TE/11502003-2016-05-17-182355.tif'
-  ;'mire2D8TE/11502003-2016-05-17-182524.tif' 
-  ;'mire2D8TE/11502003-2016-05-17-182545.tif' 
-  ;'mire2D8TE/11502003-2016-05-17-182604.tif' 
-  ;'mire2D8TE/11502003-2016-05-17-182628.tif'
-  ;'mire2D8TE/11502003-2016-05-17-182659.tif'
-  ;'cam1_z000.tif'];
-			
-	imageWater=['mire2D8TE/20-05-16/11502003-2016-05-20-163747.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-163930.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164000.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164130.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164218.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164255.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164310.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-164355.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-165140.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-165215.tif'
-        ;'mire2D8TE/20-05-16/11502003-2016-05-20-165246.tif'
-			  ;'mire2D8TE/20-05-16/11502003-2016-05-20-165246_sanscontour.tif'];
-	%for(n=1:7)
-	%I=images{n};
-    %	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
-	n=randi(rows(imageWater),1);
-  im=double(imread(imageWater{n})); 
-	nxy=[15 15];  %225 pts en 15 par 15
-	ws=32;        % valeur exacte 4.19px....
-  choixMethode = input("Methode de localisation des points\n1 - en grille 4 par 4\n2 - par iteration\nVotre choix : ");
-  
-    switch(choixMethode)
-    case 1  %----- méthode 1 --------
-            % localisation de l'image avec locate grid 4 pt ou 12 actuellmeent
-        for a=1:3
-            [uv,uv_interp,uv0]=locate_grid4pt(-im,nxy,ws,3,a);
-             temp1{a}=uv;
-             temp2{a}=uv_interp;
-             temp3{a}=uv0;  
-        endfor
-            uv=[temp1{1} ;temp1{2} ;temp1{3}];
-            uv_interp=[temp2{1}; temp2{2}; temp2{3}];
-            uv0=[temp3{1}; temp3{2}; temp3{3}];
-            
-        %setup coordonnées (en pixels) : 
-        %sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
-	 
-   
-   
-        %	 X(1)=spaceOnEdge+diameterEachDot/2;
-        %	 Y(1)=X(1);
+spaceOnEdge=1.6774647887324; 						%1mm 
+spacebetweenEdgeTwoDots=4.193661971831;			%2,5mm
+diameterEachDot=3.3544995774648;					%2mm
 
-        % si une grille de 15 -------------------------------
-        %	for(j=2:15)
-        %		X(j)=X(j-1)+diameterEachDot/2+spacebetweenEdgeTwoDots+diameterEachDot/2;
-        %		Y(j)=X(j);
-        %	endfor 
-          
-         %si une grille de 5*3 = 15 ==> 5X sur 15Y *3 -------------------------------
+
+%récupération de l'image
+image=['mire2D8TE/11502003-2016-05-17-182355.tif'
+;'mire2D8TE/11502003-2016-05-17-182524.tif' 
+;'mire2D8TE/11502003-2016-05-17-182545.tif' 
+;'mire2D8TE/11502003-2016-05-17-182604.tif' 
+;'mire2D8TE/11502003-2016-05-17-182628.tif'
+;'mire2D8TE/11502003-2016-05-17-182659.tif'
+;'cam1_z000.tif'];
+
+imageWater=['mire2D8TE/20-05-16/11502003-2016-05-20-163747.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-163930.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-164000.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-164130.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-164218.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-164255.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-164310.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-164355.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-165140.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-165215.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-165246.tif'
+    ;'mire2D8TE/20-05-16/11502003-2016-05-20-165246_sanscontour.tif'];
+    
+	%for(n=1:7)
+  %I=images{n};
+    %	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
+    
+choixMethode = input("Methode de localisation des points\n1 - en grille 4 par 4\n2 - par iteration\nVotre choix : ");
+%for n=1:rows(imageWater)
+    n=1;
+    im=double(imread(imageWater(n,:))); 
+    nxy=[15 15];  %225 pts en 15 par 15
+    ws=32;        % valeur exacte 4.19px....
+    figure
+    switch(choixMethode)
+        case 1  %----- méthode 1 --------
+                % localisation de l'image avec locate grid 4 pt ou 12 actuellmeent
+            for a=1:3
+                [uv,uv_interp,uv0] =locate_grid4pt(-im,nxy,ws,3,a);
+                 temp1{a}=uv;
+                 temp2{a}=uv_interp;
+                 temp3{a}=uv0;  
+            endfor
+                uv=[temp1{1} ;temp1{2} ;temp1{3}];
+                uv_interp=[temp2{1}; temp2{2}; temp2{3}];
+                uv0=[temp3{1}; temp3{2}; temp3{3}];
+                
+            %setup coordonnées (en pixels) : 
+            %sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
+       
+       
+       
+            %	 X(1)=spaceOnEdge+diameterEachDot/2;
+            %	 Y(1)=X(1);
+
+            % si une grille de 15 -------------------------------
+            %	for(j=2:15)
+            %		X(j)=X(j-1)+diameterEachDot/2+spacebetweenEdgeTwoDots+diameterEachDot/2;
+            %		Y(j)=X(j);
+            %	endfor 
+              
+             %si une grille de 5*3 = 15 ==> 5X sur 15Y *3 -------------------------------
+                
+            for j=2:15
+                Y(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
+                X(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
+            endfor
+            X1=repmat(X(1,1:5),15,1);
+            X2=repmat(X(1,6:10),15,1);
+            X3=repmat(X(1,11:15),15,1);
             
-        for j=2:15
-            Y(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
-            X(j)=Y(j-1)+diameterEachDot+spacebetweenEdgeTwoDots;
-        endfor
-        X1=repmat(X(1,1:5),15,1);
-        X2=repmat(X(1,6:10),15,1);
-        X3=repmat(X(1,11:15),15,1);
-        
-        X1=reshape(X1,75,1);
-        X2=reshape(X2,75,1);
-        X3=reshape(X3,75,1);
+            X1=reshape(X1,75,1);
+            X2=reshape(X2,75,1);
+            X3=reshape(X3,75,1);
+                
+            X=[X1;X2;X3];
             
-        X=[X1;X2;X3];
+            Y1=repmat(Y,1,5);
+            Y1=reshape(Y1,75,1);
+            Y=repmat(Y1,3,1);
+        case 2 %----- méthode 2 --------
+            clf;
+            imagesc(im);
+            # cliquer un marqueur au centre de l'image, 
+            # puis son voisin selon x et son voisin selon y pour créer un repère 
+            # Oxy (cf points verts sur la figure jointe)
+            [px,py]=ginput(3) 
+            %2[X,Y,I,J,C,imref,immarker,imorg,im00]=locate(-im,round([py,px]),.7);
+            [X,Y,I,J,C,imref,immarker,imorg,im00]=locate2(-im,round([py,px]),.7);
+
+            clf;
+            imagesc(im);
+            hold on;
+            plot(px,py,'og',X,Y,'*r');
+            colormap gray
+            %definir zone d'exclusion pour éliminer les points parasites.
+            
+            %récupération de coordonées réelles et calculées
+            uv=[X Y];
+            XX=[I*5];
+            YY=[J*5];
+        otherwise
+        %do nothing
+    endswitch
+%-----------------inverse matrice 2d --------------------
+
+    camera1 = uv;
+    %paramètres
+    %Z=zeros(rows(Y),1);
+    u=camera1(:,end-1);
+    v=camera1(:,end);
+
+    % ---- création de la matrice A ---
+    % produits des matrices u par XY puis on les exprime en négatifs
+    muX= -u.*XX;
+    muY= -u.*YY;
+    mvX= -v.*XX;
+    mvY= -v.*YY;
+    nbRows=rows(camera1);
+
+    matA = [XX YY ones(nbRows,1)*[1 0 0 0] muX  muY  ];
+    matA= [ matA ; ones(nbRows,1)*[0 0 0] XX YY ones(nbRows,1) mvX  mvY ]; 
+
+
+    % ------------ matrice B ----------- 
+    matB = [u;v];
+
+    % ---------- Calcul matrice M d'après AM=B soit M=B* (A à la puissance moins 1)
+    M = pinv(matA)*matB;
+    %passage d'une matrice 11,1 en matrice 4,3 en ajoutant m34=1
+    M = reshape([M;1],3,3)';
+    % norme des trois colonnes de la troisième ligne de M
+    norm_r3= norm(M(3,1:3));
+    %On divise M par cette norme pour obtenir la position de chaque point de M 
+    M=M/sqrt(sum(M(3,1:2).^2));
+    %M/=norm_r3;
+
+    uv = M*[XX YY ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
+    uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
+    % affichage  des vecteurs u et v 
+    
         
         Y1=repmat(Y,1,5);
         Y1=reshape(Y1,75,1);
