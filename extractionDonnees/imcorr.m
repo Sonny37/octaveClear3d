@@ -78,7 +78,7 @@ dJ0=zeros(nx,ny);
 SnR=zeros(nx,ny);
 sub=zeros(nx,ny);
 
-if any(size(dX)~=size(I0))|any(size(dY)~=size(J0));
+if any(size(dX)~=size(I0)) || any(size(dY)~=size(J0));
  if prod(size(I0))==1
    I0=round(I0)*ones(nx,ny);
  else
@@ -124,7 +124,7 @@ for kx=1:nx;
       
       %option 'cor2' : 2 order correlation function
       if findstr('cor2',options);
-         if x0<(Nx-nwx-1) & x<(Nx-nwx-1)
+         if x0<(Nx-nwx-1) && x<(Nx-nwx-1)
                   i1=I1(x0+[1:nwx]+1,y0+[1:nwy]);
 				      i1=i1-mean(i1(:));
 				      f1=fft2(i1)/std(i1(:),1);
@@ -132,7 +132,7 @@ for kx=1:nx;
                   i2=i2-mean(i2(:));
                   f2=fft2(i2)/std(i2(:),1);
                   c12=c12.*real(fftshift(ifft2(conj(f1).*f2)))/nwx/nwy;
-         elseif x0>1 & x>1
+         elseif x0>1 && x>1
                   i1=I1(x0+[1:nwx]-1,y0+[1:nwy]);
 				      i1=i1-mean(i1(:));
 				      f1=fft2(i1)/std(i1(:),1);
@@ -186,7 +186,7 @@ for kx=1:nx;
                sub(kx,ky)=sub(kx,ky)+20;
             end
          end
-         if (dY(kx,ky)<nwy)&(dY(kx,ky)>1)
+         if (dY(kx,ky)<nwy)&&(dY(kx,ky)>1)
  	         cy=c12(dX(kx,ky),dY(kx,ky)+[-1:1]);
             if cy>0;
                %gaussian

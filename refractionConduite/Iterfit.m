@@ -14,3 +14,5 @@ iterations = input("Entrer le nombre d'iterations: 10 20 50 75 100 150 200 300 5
 		disp("Inserer un nombre parmi les propositions ci dessous");%do nothing
 	endswitch
 endwhile
+
+    Poly_uv=[ones(rows(ug), 1) ug vg ug.*vg (ug.^2) (vg.^2) (ug.^2).*vg ug.*(vg.^2) (ug.^3) (vg.^3) (ug.^3.*vg) ug.^2.*vg.^2 (ug.*vg.^3)];
