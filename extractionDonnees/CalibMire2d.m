@@ -40,7 +40,7 @@ imageWater=['mire2D8TE/20-05-16/11502003-2016-05-20-163747.tif'
   %I=images{n};
     %	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
     
-choixMethode = input("Methode de localisation des points\n1 - en grille 4 par 4\n2 - par iteration\nVotre choix : ");
+choixMethode = input ("Methode de localisation des points\n1 - en grille 4 par 4\n2 - par iteration\n"); 
 %for n=1:rows(imageWater)
     n=1;
     im=double(imread(imageWater(n,:))); 
@@ -159,7 +159,7 @@ choixMethode = input("Methode de localisation des points\n1 - en grille 4 par 4\
     deltaU=(uv(:,1)-u);
     deltaV=(uv(:,2)-v);
         
-    typeDistorsion = input("affichage :\n 1- erreurs simples \n2- erreurs avec reconstruction grille");
+    typeDistorsion = input("affichage erreurs \n1- erreurs simples\n2- erreurs avec reconstruction grille:\n");
     switch(typeDistorsion)
     case 1    
         
@@ -184,8 +184,11 @@ choixMethode = input("Methode de localisation des points\n1 - en grille 4 par 4\
         figure
         grid on;
         plot(uv(:,1),uv(:,2),'og;"points calcules";',u+uCorrige,v+vCorrige,'xb;"poins corriges";', u, v, 'sr;"points initiaux";');
-        folder=['iterate';'grid'];
-        saveas(gcf,['Nouveau dossier/Water/' folder(choixMethode) 'Method/Mire_' num2str(imageWater(n,strchr(imageWater(n,:), '-')(end)+1:end)) '_Reconstruction.png']);
+        
+		folder=['iterate';'grid'];
+        numImg=imageWater(n,strchr(imageWater(n,:), '-')(end)+1:end); 
+
+		saveas(gcf,['Nouveau dossier/Water/' folder(choixMethode) 'Method/Mire_' num2str(numImg) '_Reconstruction.png']);
 
 
         figure % WITH SUBPLOTS AND DATA
@@ -214,13 +217,14 @@ choixMethode = input("Methode de localisation des points\n1 - en grille 4 par 4\
         newUnits = 'normalized';
         set(hL,'Position', newPosition,'Units', newUnits);
         %   SAVING FIGURE
-        saveas(gcf,['Nouveau dossier/Water/' folder(choixMethode) 'Method/Mire_' num2str(imageWater(n,strchr(imageWater(n,:), '-')(end)+1:end)) '_Ecarts.png']);
+        saveas(gcf,['Nouveau dossier/Water/' folder(choixMethode) 'Method/Mire_' num2str(numImg) '_Ecarts.png']);
 %endfor
 
     case 2
     % Mesure de la resolution moyenne de l'image
-    imin=input("Veuillez entrez le pas de decalage mini et maxi pour chaque axes par rapport au point d\'origine. Ce pas de decalage doit etre pris a la derniere ligne ou colonne de points identifies en rouge, les lignes non visibles ou non identifiees ne devant pas etre prises en comptes:\n imin : ");
-    imax=input("imax = ");
+    printf("Veuillez entrer le pas de d%ccalage mini et maxi pour chaque axe par rapport au \npoint O d'origine. Ce pas doit %ctre pris %c la derni%cre ligne ou colonne de points identifi%cs en rouge, les lignes non visibles ou non identifi%ces ne devant pas %ctre prises en compte.\n",130 , 136, 134 ,138,130,130,136);
+	imin=input("imax= ");
+	imax=input("imax = ");
     jmin=input("jmin = ");
     jmax=input("jmax = ");
     
@@ -230,24 +234,33 @@ choixMethode = input("Methode de localisation des points\n1 - en grille 4 par 4\
     
    
     %Création grille X Y à résolution imposée
-    [xg,yg]=meshgrid(-35:1/16:30,-35:1/16:35);
+    figure
+	[xg,yg]=meshgrid(-35:1/16:30,-35:1/16:35);
     
     % Projection de X Y vers u v 
     suvg=M*[xg(:) yg(:) 0*xg(:)+1]';
-    ug=suvg(1,:)./suvg(3,:);
-    vg=suvg(2,:)./suvg(3,:);
+    ug=(suvg(1,:)./suvg(3,:))';
+    vg=(suvg(2,:)./suvg(3,:))';
     
     Ig=interp2(im,ug,vg);
     Ig=reshape(Ig,size(xg));
     imagesc(Ig);
     % Correction de la distorsion uc et vc
     Poly_uvg=[ones(rows(ug),1) ug vg ug.*vg (ug.^2) (vg.^2) (ug.^2).*vg ug.*(vg.^2) (ug.^3) (vg.^3) (ug.^3.*vg) ug.^2.*vg.^2 (ug.*vg.^3)];
-       
-    coefdeug=Poly_uvg\deltaU; %coefs
-    coefdevg=Poly_uvg\deltaV;
-    uCorrige=Poly_uvg*coefdeug; 
-    vCorrige=Poly_uvg*coefdevg;ug
-      
-    endswitch
+    
+	mm=1;
+	timer=time();
+	while(mm*213 < 121363944 && time() < timer +10)
+		start=(mm-1)*213+1;
+		stop=213*mm;
+		coefdeug(:,mm)=Poly_uvg(start:stop,:)\deltaU;
+		coefdevg(:,mm)=Poly_uvg(start:stop,:)\deltaV;
+	endwhile
+	pause
+	
+    
+    uCorrige=Poly_uvg*coefdeug'; 
+    vCorrige=Poly_uvg*coefdevg';
+	endswitch
 
  %  endfunction
