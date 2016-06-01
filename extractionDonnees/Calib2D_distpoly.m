@@ -1,8 +1,11 @@
-function [I,J, cdu, cdv, imc, resolution,ugc, vgc]=Calib2D_distpoly(img) %eventually add polynome order
-%function [cdu, cdv, imc,resolution,ugc, vgc]=Calib2D_distpoly(img)
+%function [I,J, cdu, cdv, imc, resolution,ugc, vgc, xg,yg,errU,errV,uv]=Calib2D_distpoly(img,polyOrder) %eventually add polynome order
+imload
+img=s.i2;
+
+%function [I,J, cdu, cdv, imc, resolution,ugc, vgc, xg,yg,errU,errV,uv]=Calib2D_distpoly(img) %eventually add polynome order
 	%INPUT 
 	%img : can either be a filepath from a picture or a variable containing picture data 
-	
+	%polyOrder : ask the ordre of polynomial function to control the accuac of the point reprojections
 	%OUTPUT 
 	%cdu, cdv : can either be a filepath from a picture or a variable containing picture data %INPUT 
 	%cdv : can either be a filepath from a picture or a variable containing picture data %INPUT 
@@ -11,7 +14,8 @@ function [I,J, cdu, cdv, imc, resolution,ugc, vgc]=Calib2D_distpoly(img) %eventu
 	%ugc, vgc : corrected coorcinates using a polynomial  
 	%I,J : real coordinates extracted from locate or locate_2 see line 78
 	
-	if strcmp('tiff',img(end-3:end))||strcmp('tif',img(end-2:end))
+	
+	if strcmp('tiff',img(end-3:end)) || strcmp('tif',img(end-2:end))
 		im=double(imread(img)); % fichier
 	else
 		im=img; %matrice
