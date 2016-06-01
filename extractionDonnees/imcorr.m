@@ -172,7 +172,7 @@ for kx=1:nx;
       
       %option 'sub' : subpixel
       if findstr('sub',options);
-         if (dX(kx,ky)<nwx)&(dX(kx,ky)>1)
+         if (dX(kx,ky)<nwx)&&(dX(kx,ky)>1)
       	   %c=c12(dX(kx,ky)+[-1:1],dY(kx,ky)+[-1:1]);
 	        	%-min(min(C((kx-1)*(nw+1)+[1:nw],(ky-1)*(nw+1)+[1:nw])));
 		      cx=c12(dX(kx,ky)+[-1:1],dY(kx,ky));
