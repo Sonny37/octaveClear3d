@@ -181,43 +181,40 @@ choixMethode = input ("Methode de localisation des points\n1 - en grille 4 par 4
         
         a(n,:)=[errU errV];
         
-        figure
-        grid on;
-        plot(uv(:,1),uv(:,2),'og;"points calcules";',u+uCorrige,v+vCorrige,'xb;"poins corriges";', u, v, 'sr;"points initiaux";');
         
 		folder=['iterate';'grid'];
         numImg=imageWater(n,strchr(imageWater(n,:), '-')(end)+1:end); 
 
 		saveas(gcf,['Nouveau dossier/Water/' folder(choixMethode) 'Method/Mire_' num2str(numImg) '_Reconstruction.png']);
 
+	figure
+	grid on;
+	plot(uv(:,1),uv(:,2),'og;"points calcules";',u+uCorrige,v+vCorrige,'xb;"poins corriges";', u, v, 'sr;"points initiaux";');
+	
+	folder=['gridMethod';'iterateMethod'];
+	numImg=imageWater(n,strchr(imageWater(n,:), '-')(end)+1:end); 
 
-        figure % WITH SUBPLOTS AND DATA
-        title('Ecarts entre les coordonnees u et v avant et apres calibration')
-        subplot(231);
-        p1=plot(uv(:,1)-u,'ob');  % pour observer l'erreur de positionnement de chaque points
+	 saveas(gcf,['images/Water/' folder(choixMethode,1:findstr(folder (choixMethode,:), 'o')+1) '/Mire_' num2str(numImg) '_Reconstruction.png']);
 
-        subplot(232);
-        p2=plot(uv(:,2)-v,'og');  % pour observer l'erreur de positionnement de chaque points
 
-        subplot(233);
-        p3=plot(u-uCorrige,'om');  % pour observer l'erreur de positionnement de chaque points
+	figure % WITH SUBPLOTS AND DATA
+	title('Ecarts entre les coordonnees u et v avant et apres calibration')
+	subplot(211);
+	p1=plot(uv(:,1)-u,'ob');  % pour observer l'erreur de positionnement de chaque points
 
-        subplot(234);
-        p4=plot(v-vCorrige ,'or');  % pour observer l'erreur de positionnement de chaque points
+	subplot(212);
+	p2=plot(uv(:,2)-v,'og');  % pour observer l'erreur de positionnement de chaque points
 
-        subplot(235);
-        p5=plot(uv(:,1)-uCorrige ,'oc');  % pour observer l'erreur de positionnement de chaque points
 
-        subplot(236);
-        p6=plot(uv(:,2)-vCorrige ,'ok');  % pour observer l'erreur de positionnement de chaque points
-        %LEGEND WITH DATA FROM THE SUBPLOTS
-        hL = legend([p1,p2,p3,p4,p5,p6],{'u VS u calcule','v VS v calcule','u vs uCorrige','v vs vCorrige','u calcule vs uCorrige','v calcule vs vCorrige'});
+	  %LEGEND WITH DATA FROM THE SUBPLOTS
+        %hL = legend([p1,p2,p3,p4,p5,p6],{'u VS u calcule','v VS v calcule','u vs uCorrige','v vs vCorrige','u calcule vs uCorrige','v calcule vs vCorrige'});
+        hL = legend([p1,p2],{'u VS u calcule','v VS v calcule'});
         % Programatically move the Legend to the center west
-        newPosition = [0.0001 0.46 0.1 0.1]; %[  posx, pos y,espace legende et texte legende, interligne legende]
+        newPosition = [0.01 0.49 0.2 0.05]; %[  posx, pos y,espace legende et texte legende, interligne legende]
         newUnits = 'normalized';
         set(hL,'Position', newPosition,'Units', newUnits);
         %   SAVING FIGURE
-        saveas(gcf,['Nouveau dossier/Water/' folder(choixMethode) 'Method/Mire_' num2str(numImg) '_Ecarts.png']);
+        saveas(gcf,['images/Water/' folder(choixMethode,1:findstr(folder (choixMethode,:), 'o')+1) '/Mire_' num2str(numImg) '_Ecarts.png']);
 %endfor
 
     case 2
