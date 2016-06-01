@@ -1,5 +1,4 @@
-%
-%function [M] = CalibMire2d
+function [im,ugc,vgc,xg,yg,px,py] = CalibMire2d
 %this function determine the matrice from using picture point detection
 % It output a matrix from the AM= B product, given by u and v coordinates and X,Y real coordinates
 	%valable pour une la première image prise de face
@@ -8,6 +7,8 @@
 	%M : 3x3 matrix corresponding to the eight coefficients of the M matrix which will help position camera
 	
 %2016-05-20 V.ROUILLÉ L.CHATELLIER
+
+clc;
 	
 spaceOnEdge=1.6774647887324; 						%1mm 
 spacebetweenEdgeTwoDots=4.193661971831;			%2,5mm
@@ -36,14 +37,12 @@ imageWater=['mire2D8TE/20-05-16/11502003-2016-05-20-163747.tif'
     ;'mire2D8TE/20-05-16/11502003-2016-05-20-165246.tif'
     ;'mire2D8TE/20-05-16/11502003-2016-05-20-165246_sanscontour.tif'];
     
-	%for(n=1:7)
-  %I=images{n};
-    %	I=double(imread('mire2D8TE/11502003-2016-05-17-182355.tif'));
     
 choixMethode = input ("Methode de localisation des points\n1 - en grille 4 par 4\n2 - par iteration\n"); 
-%for n=1:rows(imageWater)
-    n=1;
-    im=double(imread(imageWater(n,:))); 
+ 
+
+ for n=11;
+	im=double(imread(imageWater(n,:)));
     nxy=[15 15];  %225 pts en 15 par 15
     ws=32;        % valeur exacte 4.19px....
     figure
@@ -94,7 +93,7 @@ choixMethode = input ("Methode de localisation des points\n1 - en grille 4 par 4
             Y1=reshape(Y1,75,1);
             Y=repmat(Y1,3,1);
         case 2 %----- méthode 2 --------
-            clf;
+			clf;
             imagesc(im);
             # cliquer un marqueur au centre de l'image, 
             # puis son voisin selon x et son voisin selon y pour créer un repère 
@@ -108,7 +107,8 @@ choixMethode = input ("Methode de localisation des points\n1 - en grille 4 par 4
             hold on;
             plot(px,py,'og',X,Y,'*r');
             colormap gray
-            %definir zone d'exclusion pour éliminer les points parasites.
+            
+			%definir zone d'exclusion pour éliminer les points parasites.
             
             %récupération de coordonées réelles et calculées
             uv=[X Y];
@@ -159,33 +159,23 @@ choixMethode = input ("Methode de localisation des points\n1 - en grille 4 par 4
     deltaU=(uv(:,1)-u);
     deltaV=(uv(:,2)-v);
         
-    typeDistorsion = input("affichage erreurs \n1- erreurs simples\n2- erreurs avec reconstruction grille:\n");
-    switch(typeDistorsion)
-    case 1    
-        
-        %1 u v uv u² v² u²v v²u u^3 v^3 u^3*v u²v² uv^3
-        Poly_uv=[ones(rows(u), 1) u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2 (u.*v.^3)];
-        
-        %vars{2}=[u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3)];
-        %vars{3}=[ones(rows(u), 1) u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3) ];
+   
+	%1 u v uv u² v² u²v v²u u^3 v^3 u^3*v u²v² uv^3
+	Poly_uv=[ones(rows(u), 1) u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2 (u.*v.^3)];
+	
+	%vars{2}=[u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3)];
+	%vars{3}=[ones(rows(u), 1) u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3) ];
 
-        string{1}="polynomeFull";
-        %string{2}="polynomeSans1";
-        %string{3}="polynomeSansu_et_v";
-        cdu=Poly_uv\deltaU; %coefs
-        cdv=Poly_uv\deltaV;
-        uCorrige=Poly_uv*cdu; 
-        vCorrige=Poly_uv*cdv;
-        errU=std(uv(:,1)-u-uCorrige); %erreur standard
-        errV=std(uv(:,2)-v-vCorrige);
-        
-        a(n,:)=[errU errV];
-        
-        
-		folder=['iterate';'grid'];
-        numImg=imageWater(n,strchr(imageWater(n,:), '-')(end)+1:end); 
-
-		saveas(gcf,['Nouveau dossier/Water/' folder(choixMethode) 'Method/Mire_' num2str(numImg) '_Reconstruction.png']);
+	string{1}="polynomeFull";
+	%string{2}="polynomeSans1";
+	%string{3}="polynomeSansu_et_v";
+	cdu=Poly_uv\deltaU; %coefs
+	cdv=Poly_uv\deltaV;
+	uCorrige=Poly_uv*cdu; 
+	vCorrige=Poly_uv*cdv;
+	errU=std(uv(:,1)-u-uCorrige); %erreur standard
+	errV=std(uv(:,2)-v-vCorrige);
+	
 
 	figure
 	grid on;
@@ -217,47 +207,72 @@ choixMethode = input ("Methode de localisation des points\n1 - en grille 4 par 4
         saveas(gcf,['images/Water/' folder(choixMethode,1:findstr(folder (choixMethode,:), 'o')+1) '/Mire_' num2str(numImg) '_Ecarts.png']);
 %endfor
 
-    case 2
-    % Mesure de la resolution moyenne de l'image
-    printf("Veuillez entrer le pas de d%ccalage mini et maxi pour chaque axe par rapport au \npoint O d'origine. Ce pas doit %ctre pris %c la derni%cre ligne ou colonne de points identifi%cs en rouge, les lignes non visibles ou non identifi%ces ne devant pas %ctre prises en compte.\n",130 , 136, 134 ,138,130,130,136);
-	imin=input("imax= ");
-	imax=input("imax = ");
-    jmin=input("jmin = ");
-    jmax=input("jmax = ");
+% Mesure de la resolution moyenne de l'image
+    %printf("Veuillez entrer le pas de d%ccalage mini et maxi pour chaque axe par rapport au \npoint O d'origine. Ce pas doit %ctre pris %c la derni%cre ligne ou colonne de points identifi%cs en rouge, les lignes non visibles ou non identifi%ces ne devant pas %ctre prises en compte.\n",130 , 136, 133 ,138,130,130,136);
+	% imin=input("imin= ");
+	% imax=input("imax = ");
+    % jmin=input("jmin = ");
+    % jmax=input("jmax = ");
+	
+	imin=-7;
+	imax=7;
+    jmin=-7;
+    jmax=7;
+	
+	% %printf("Veuillez entrer maintenant le nombre de lignes %c priori non visibles sur les bords de la mire : \n Si c'est %c gauche de la mire ajouter le signe '-'.",133);
+	% %di=input("dI =");
+	% %dj=input("dJ = ");
+	% if((imax-imin+1) != 15) % +1 en comptant le point origine
+		% printf("Le nombre de lignes en abcisses est < %c 15. Sur les bords gauche et droit de la mire, une ligne manque : \n Si c'est %c gauche de la mire ajouter le signe '-' au chiffre.",133, 133);
+		% di=input("dI =");
+		% if(di < 0) % si - alors min
+			% imin +=di;
+		% else % si + alors max
+			% imax+=di
+		% endif
+	% endif
+	% if((jmax-jmin)+1 != 15)
+		% printf("Le nombre de lignes en ordonn%ces est < %c 15. Sur les bords haut et bas de la mire, une ligne manque : si c'est en bas de la mire, ajouter le signe '-' au chiffre.", 130,133);
+		% dj=input("dJ =");
+		% if(dj < 0) % si - alors min
+			% jmin +=dj;
+		% else % si + alors max
+			% jmax+=dj;
+		% endif
+	% endif	
     
     suv=M*[imin imax; jmin jmax; 1 1];
     suv=suv(1:2,:)./suv([3;3],:);
-    resolution=sqrt(suv(2,1)-suv(1,1)^2+suv(2,2)-suv(1,2)^2);
+    resolution=sqrt((suv(2,1)-suv(1,1))^2+(suv(2,2)-suv(1,2))^2);
     
    
     %Création grille X Y à résolution imposée
     figure
-	[xg,yg]=meshgrid(-35:1/16:30,-35:1/16:35);
+	[xg,yg]=meshgrid(imin*5:1/16:imax*5,jmin*5:1/16:jmax*5);
     
     % Projection de X Y vers u v 
     suvg=M*[xg(:) yg(:) 0*xg(:)+1]';
-    ug=(suvg(1,:)./suvg(3,:))';
+    
+	ug=(suvg(1,:)./suvg(3,:))';
     vg=(suvg(2,:)./suvg(3,:))';
     
     Ig=interp2(im,ug,vg);
     Ig=reshape(Ig,size(xg));
-    imagesc(Ig);
-    % Correction de la distorsion uc et vc
+    imagesc(Ig); 
+	title('Mire avant correction')
+	%saveas(gcf,['MireEau' num2str(n) 'avantCorrection.png'])
     Poly_uvg=[ones(rows(ug),1) ug vg ug.*vg (ug.^2) (vg.^2) (ug.^2).*vg ug.*(vg.^2) (ug.^3) (vg.^3) (ug.^3.*vg) ug.^2.*vg.^2 (ug.*vg.^3)];
     
-	mm=1;
-	timer=time();
-	while(mm*213 < 121363944 && time() < timer +10)
-		start=(mm-1)*213+1;
-		stop=213*mm;
-		coefdeug(:,mm)=Poly_uvg(start:stop,:)\deltaU;
-		coefdevg(:,mm)=Poly_uvg(start:stop,:)\deltaV;
-	endwhile
-	pause
+	ugCorrige=Poly_uvg*cdu; 
+    vgCorrige=Poly_uvg*cdv;
 	
-    
-    uCorrige=Poly_uvg*coefdeug'; 
-    vCorrige=Poly_uvg*coefdevg';
-	endswitch
+	ugc=ug-ugCorrige;
+	vgc=vg-vgCorrige;	
+	
+	%save ("-append", ["images/noWater/dataMire_" num2str(n) ".txt"],"im", "ugc", "vgc","xg","yg","px","py");
+	names = ["Img1"; "Img2"; "Img3","Img4"; "Img5","Img6"; "Img7";"Img8"; "Img9";"Img10"; "Img11"];
+	imc=Calib2D_distpoly(im,ugc,vgc,xg,yg,px,py,resolution,n);
+	database.(names(n,:))=imc;
+endfor	
 
- %  endfunction
+   endfunction
