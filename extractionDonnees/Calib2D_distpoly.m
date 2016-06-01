@@ -145,8 +145,14 @@ function [I,J, cdu, cdv, imc, resolution,ugc, vgc]=Calib2D_distpoly(img) %eventu
     deltaV=(uv(:,2)-v);
         
 	%1 u v uv u² v² u²v v²u u^3 v^3 u^3*v u²v² uv^3
-	Poly_uv=[ones(rows(u), 1) u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2 (u.*v.^3)];
+	Poly_uv=[ones(rows(u), 1) 	...	
+				u 		v ...
+				u.^2	u.*v 			v.^2	...  
+				u.^3	power(u,2).*v 	u.*power(v,2)  			v.^3]; ... 
+				u.^4 	power(u,3).*v 	power(u,2).*power(v,2) 	u.*power(v,3) 	v.^4];
 	
+	cols=[1 3 6 10 15];
+	Poly_uv=Poly_uv(:,1:cols(polyOrder+1));
 	%vars{2}=[u v u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3)];
 	%vars{3}=[ones(rows(u), 1) u.*v (u.^2) (v.^2) (u.^2).*v u.*(v.^2) (u.^3) (v.^3) (u.^3.*v) u.^2.*v.^2  (u.*v.^3) ];
 	% polynomes différents mais trop grands avec une image réfracté sous l'eau
@@ -251,8 +257,15 @@ function [I,J, cdu, cdv, imc, resolution,ugc, vgc]=Calib2D_distpoly(img) %eventu
     
 		%correction de la mire
 	%formation du polynome	
-	Poly_uvg=[ones(rows(ug),1) ug vg ug.*vg (ug.^2) (vg.^2) (ug.^2).*vg ug.*(vg.^2) (ug.^3) (vg.^3) (ug.^3.*vg) ug.^2.*vg.^2 (ug.*vg.^3)];
-    
+	Poly_uvg=[ones(rows(ug), 1) 		...
+				ug 		vg ...
+				ug.^2	ug.*vg 				vg.^2	...  
+				ug.^3	power(ug,2).*vg 	ug.*power(vg,2)  			vg.^3 ]; ...
+				ug.^4 	power(ug,3).*vg 	power(ug,2).*power(vg,2) 	ug.*power(vg,3) 	vg.^4];
+	
+	cols=[1 3 6 10 15];
+	Poly_uvg=Poly_uvg(:,1:cols(polyOrder+1));
+		
 	ugCorrige=Poly_uvg*cdu; %ajout des coeeficients
     vgCorrige=Poly_uvg*cdv;
 	
