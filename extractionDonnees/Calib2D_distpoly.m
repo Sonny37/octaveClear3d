@@ -171,32 +171,36 @@ img=s.i2;
 	uCorrige=Poly_uv*cdu; 
 	vCorrige=Poly_uv*cdv;
 	
-	errU=std(uv(:,1)-u-uCorrige); %erreur standard
-	errV=std(uv(:,2)-v-vCorrige);
+	errU=[std(uv(:,1)-u) std(uv(:,1)-u-uCorrige)] ; %erreur standard
+	errV=[std(uv(:,2)-v) std(uv(:,2)-v-vCorrige)];
         
    
 	figure;	grid on;
-	plot(uv(:,1),uv(:,2),'og;"points calcules";',u+uCorrige,v+vCorrige,'xb;"poins corriges";', u, v, 'sr;"points initiaux";');
+	plot(uv(:,1),uv(:,2),'og;"points reprojetes";',uv(:,1)-uCorrige, uv(:,2)-vCorrige,'xb;"points corriges";', u, v, 'sr;"points detectes";');
 	 
-	saveas(gcf,['Mire_Reconstruction.png']);
+	%saveas(gcf,['Mire_Reconstruction.png']);
 
 
 	figure % WITH SUBPLOTS AND DATA
 	title('Ecarts entre les coordonnees u et v avant et apres calibration')
 	subplot(211);
-	p1=plot(uv(:,1)-u,'ob');  % pour observer l'erreur de positionnement de chaque points
+	p1=plot(u,uv(:,1)-u,'ob',u,uv(:,1)-uCorrige-u,'xm');  % pour observer l'erreur de positionnement de chaque point
 
 	subplot(212);
-	p2=plot(uv(:,2)-v,'og');  % pour observer l'erreur de positionnement de chaque points
-
-	hL = legend([p1,p2],{'u VS u calcule','v VS v calcule'});
+	p2=plot(v,uv(:,2)-v,'og',v,uv(:,2)-vCorrige-v,'xr');  % pour observer l'erreur de positionnement de chaque point
+	
+	figure
+	plot(uv(:,1)-u, uv(:,2)-v,'o',uv(:,1)-u-uCorrige,uv(:,2)-v-vCorrige,'x')
+	
+	hL = legend([p1,p2],{' sur u','sur v'});
+	title('erreur de reprojections')
 	% Programatically move the Legend to the center west
 	newPosition = [0.01 0.49 0.2 0.05]; %[  posx, pos y,espace legende et texte legende, interligne legende]
 	newUnits = 'normalized';
 	set(hL,'Position', newPosition,'Units', newUnits);
 	
 	%   SAVING FIGURE
-	saveas(gcf,['MireEcarts.png']);
+	%saveas(gcf,['MireEcarts.png']);
 
     % Mesure de la resolution moyenne de l'image
     
