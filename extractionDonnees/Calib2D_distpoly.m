@@ -1,6 +1,8 @@
 %function [I,J, cdu, cdv, imc, resolution,ugc, vgc, xg,yg,errU,errV,uv]=Calib2D_distpoly(img,polyOrder) %eventually add polynome order
-imload
-img=s.i2;
+%imload
+%img=s.i2;
+polyOrder=4; % default value
+
 
 %function [I,J, cdu, cdv, imc, resolution,ugc, vgc, xg,yg,errU,errV,uv]=Calib2D_distpoly(img) %eventually add polynome order
 	%INPUT 
@@ -14,13 +16,15 @@ img=s.i2;
 	%ugc, vgc : corrected coorcinates using a polynomial  
 	%I,J : real coordinates extracted from locate or locate_2 see line 78
 	
-	
+%img='E:\Projects\SourceTree\octaveClear3d\extractionDonnees\11502003-2016-05-20-165140.tif';	
+% img='E:\Projects\SourceTree\octaveClear3d\extractionDonnees\11502003-2016-05-20-165215.tif';	
+img='11502003-2016-05-20-165246.tif';	
+
 	if strcmp('tiff',img(end-3:end)) || strcmp('tif',img(end-2:end))
 		im=double(imread(img)); % fichier
 	else
 		im=img; %matrice
 	endif
-	
 	
     nxy=[15 15];  %225 pts en 15 par 15
     ws=32;        % valeur exacte 4.19px....
@@ -86,11 +90,21 @@ img=s.i2;
             clf;
             imagesc(im);
             hold on;
-            plot(px,py,'og',X,Y,'*r');
+            
+			plot(px,py,'og',X,Y,'*r');
+			
             colormap gray
-            
 			%definir zone d'exclusion pour éliminer les points parasites.
-            
+            % whos I J X Y
+			
+			% exclusion des derniers points de coordonées
+			% les points les plus au bords 13*4 + 4*1
+			X(end-56:end)=[];
+			Y(end-56:end)=[];
+			I(end-56:end)=[];
+			J(end-56:end)=[];
+					
+			
             %récupération de coordonées réelles et calculées
             uv=[X Y];
             XX=[I*5];
@@ -138,7 +152,7 @@ img=s.i2;
     uv = M*[XX YY ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
     uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
     
-
+	
     
     %-----------------Distorsion----------------------------------------------
     
@@ -152,7 +166,7 @@ img=s.i2;
 	Poly_uv=[ones(rows(u), 1) 	...	
 				u 		v ...
 				u.^2	u.*v 			v.^2	...  
-				u.^3	power(u,2).*v 	u.*power(v,2)  			v.^3]; ... 
+				u.^3	power(u,2).*v 	u.*power(v,2)  			v.^3 ... 
 				u.^4 	power(u,3).*v 	power(u,2).*power(v,2) 	u.*power(v,3) 	v.^4];
 	
 	cols=[1 3 6 10 15];
@@ -174,33 +188,35 @@ img=s.i2;
 	errU=[std(uv(:,1)-u) std(uv(:,1)-u-uCorrige)] ; %erreur standard
 	errV=[std(uv(:,2)-v) std(uv(:,2)-v-vCorrige)];
         
-   
+    
 	figure;	grid on;
 	plot(uv(:,1),uv(:,2),'og;"points reprojetes";',uv(:,1)-uCorrige, uv(:,2)-vCorrige,'xb;"points corriges";', u, v, 'sr;"points detectes";');
-	 
-	%saveas(gcf,['Mire_Reconstruction.png']);
+	saveas(gcf,['Mire_Reconstruction.png']);
 
 
 	figure % WITH SUBPLOTS AND DATA
-	title('Ecarts entre les coordonnees u et v avant et apres calibration')
 	subplot(211);
 	p1=plot(u,uv(:,1)-u,'ob',u,uv(:,1)-uCorrige-u,'xm');  % pour observer l'erreur de positionnement de chaque point
-
+	
 	subplot(212);
 	p2=plot(v,uv(:,2)-v,'og',v,uv(:,2)-vCorrige-v,'xr');  % pour observer l'erreur de positionnement de chaque point
 	
-	figure
-	plot(uv(:,1)-u, uv(:,2)-v,'o',uv(:,1)-u-uCorrige,uv(:,2)-v-vCorrige,'x')
-	
 	hL = legend([p1,p2],{' sur u','sur v'});
-	title('erreur de reprojections')
+	title('erreur de reprojections');
+	
 	% Programatically move the Legend to the center west
 	newPosition = [0.01 0.49 0.2 0.05]; %[  posx, pos y,espace legende et texte legende, interligne legende]
 	newUnits = 'normalized';
 	set(hL,'Position', newPosition,'Units', newUnits);
+	saveas(gcf,'errRepro.png');
+	
+	
+	figure
+	plot(uv(:,1)-u, uv(:,2)-v,'o',uv(:,1)-u-uCorrige,uv(:,2)-v-vCorrige,'x')
+	title('Ecarts entre les coordonnees u et v avant et apres calibration');
 	
 	%   SAVING FIGURE
-	%saveas(gcf,['MireEcarts.png']);
+	saveas(gcf,['MireEcarts.png']);
 
     % Mesure de la resolution moyenne de l'image
     
@@ -261,14 +277,16 @@ img=s.i2;
     
 	imagesc(Ig); 
 	title('Mire avant correction')
-	%saveas(gcf,['MireEau' num2str(n) 'avantCorrection.png'])
+	saveas(gcf,['MireEauavantCorrection.png'])
     
 		%correction de la mire
+		
+	disp("correction")	;
 	%formation du polynome	
 	Poly_uvg=[ones(rows(ug), 1) 		...
 				ug 		vg ...
 				ug.^2	ug.*vg 				vg.^2	...  
-				ug.^3	power(ug,2).*vg 	ug.*power(vg,2)  			vg.^3 ]; ...
+				ug.^3	power(ug,2).*vg 	ug.*power(vg,2)  			vg.^3  ...
 				ug.^4 	power(ug,3).*vg 	power(ug,2).*power(vg,2) 	ug.*power(vg,3) 	vg.^4];
 	
 	cols=[1 3 6 10 15];
@@ -282,7 +300,7 @@ img=s.i2;
 	vgc=vg-vgCorrige;	
 	
 	%Construction de la nouvelle grille
-	pkg load signal
+	%pkg load signal
 	figure
 	imc=interp2(im,ugc,vgc); %+dx +dy
 	imc=reshape(imc, size(xg));
@@ -291,85 +309,85 @@ img=s.i2;
 	imagesc(imc);
 	title(['Mire Corrigee - resolution =' num2str(resolution) ])
 	
-	%saveas('gcf,['MireEau' num2str(n) 'apresCorrection.png'])
+	saveas('gcf','MireEauapresCorrection.png')
 	
 	%------------- POUR REDIMENSIONER LA GRILLE (facultatif )--- commenter ou décommenter des lignes 273 à 349
-	printf("Indiquer le nombres de cercles et de demi cercles en sp%ccifiant la surface de la grille : exemple 15 x 15.\n",130);
-	x=input("x : ");
-	y=input("y : ");
+	% printf("Indiquer le nombres de cercles et de demi cercles en sp%ccifiant la surface de la grille : exemple 15 x 15.\n",130);
+	% x=input("x : ");
+	% y=input("y : ");
 	
-	if( x != 15)
-		dx=(15-x)*(px(2)-px(1));
-	else
-		dx=(px(2)-px(1))/2;
-	endif
-	if( y != 15)
-		dy=(15-y)*(py(2)-py(1));
-	else
-		dy=(py(2)-py(1))/2;
-	endif
+	% if( x != 15)
+		% dx=(15-x)*(px(2)-px(1));
+	% else
+		% dx=(px(2)-px(1))/2;
+	% endif
+	% if( y != 15)
+		% dy=(15-y)*(py(2)-py(1));
+	% else
+		% dy=(py(2)-py(1))/2;
+	% endif
 	 
 	 
-	side="    ";
-	while(side != "stop")
-		printf("Indiquer %cgalement les cot%cs o%c il manque la ou les lignes : droite = d, bas = b, haut = h, gauche = g\n",130,130,151);
-		side=input("cote :");
-		switch(side)
-			case "g"
-				imc=interp2(im,ugc-dx,vgc);
-				disp("1\n");
-			case "b"
-				imc=interp2(im,ugc,vgc+dy);
-				disp("2\n");
-			case "d"
-				imc=interp2(im,ugc+dx,vgc);
-				disp("3\n");
-			case "h"
-				imc=interp2(im,ugc,vgc-dy);
-				disp("4\n");
-			case {"gb", "bg"}
-				imc=interp2(im,ugc-dx,vgc+dy);
-				disp("5n");
-			case {"gh", "hg"}
-				imc=interp2(im,ugc-dx,vgc-dy);
-				disp("6\n");
-			case {"dh", "hd"}
-				imc=interp2(im,ugc+dx,vgc-dy);
-				disp("7\n");
-			case {"db", "bd"}
-				imc=interp2(im,ugc-dx,vgc+dy);
-				disp("8\n");
-			case {"hb", "bh"}
-				vgc2=[vgc(1:round(rows(vgc)/2-1))-dy;vgc(round(rows(vgc)/2));vgc(round(rows(vgc)/2)+1:rows(vgc))+dy];
-				imc=interp2(im,ugc,vgc2);
-				disp("9\n");
-			case {"dg", "gd"}
-				imc=interp2(im,ugc*(abs(dx)/2),vgc);
-				disp("10\n");
-			case{"dgh", "dhg", "ghd", "hdg", "hgd", "gdh" }
-				disp("11\n");
-				imc=interp2(im,ugc*(abs(dx)/2),vgc-dy);
-			case{"dgb", "dbg", "gbd", "bdg", "bgd", "gdb" }
-				imc=interp2(im,ugc*(abs(dx)/2),vgc+dy);
-				disp("12\n");
-			case{"dhb", "dbh", "hbd", "bdh", "bhd", "hdb" }
-				imc=interp2(im,ugc-dx,vgc*(abs(dy)/2));
-				disp("13\n");
-			case{"ghb", "gbh", "hbg", "bgh", "bhg", "hgb" }
-				imc=interp2(im,ugc+dx,vgc*(abs(dy)/2));
-				disp("14\n");
-			case{"ghbd", "ghdb", "gdhb", "dghb", "dgbh", "dbgh","bdgh", "bdhg","bhdg","hbdg", "hbgd", "hbdg","hdbg","dhbg","dhgb"}
-				imc=interp2(im,ugc-dx,vgc*(abs(dy)/2));
-				disp("15\n");
-			otherwise
-				disp("0\n");
-				% si d ou h 
-		endswitch
+	% side="    ";
+	% while(side != "stop")
+		% printf("Indiquer %cgalement les cot%cs o%c il manque la ou les lignes : droite = d, bas = b, haut = h, gauche = g\n",130,130,151);
+		% side=input("cote :");
+		% switch(side)
+			% case "g"
+				% imc=interp2(im,ugc-dx,vgc);
+				% disp("1\n");
+			% case "b"
+				% imc=interp2(im,ugc,vgc+dy);
+				% disp("2\n");
+			% case "d"
+				% imc=interp2(im,ugc+dx,vgc);
+				% disp("3\n");
+			% case "h"
+				% imc=interp2(im,ugc,vgc-dy);
+				% disp("4\n");
+			% case {"gb", "bg"}
+				% imc=interp2(im,ugc-dx,vgc+dy);
+				% disp("5n");
+			% case {"gh", "hg"}
+				% imc=interp2(im,ugc-dx,vgc-dy);
+				% disp("6\n");
+			% case {"dh", "hd"}
+				% imc=interp2(im,ugc+dx,vgc-dy);
+				% disp("7\n");
+			% case {"db", "bd"}
+				% imc=interp2(im,ugc-dx,vgc+dy);
+				% disp("8\n");
+			% case {"hb", "bh"}
+				% vgc2=[vgc(1:round(rows(vgc)/2-1))-dy;vgc(round(rows(vgc)/2));vgc(round(rows(vgc)/2)+1:rows(vgc))+dy];
+				% imc=interp2(im,ugc,vgc2);
+				% disp("9\n");
+			% case {"dg", "gd"}
+				% imc=interp2(im,ugc*(abs(dx)/2),vgc);
+				% disp("10\n");
+			% case{"dgh", "dhg", "ghd", "hdg", "hgd", "gdh" }
+				% disp("11\n");
+				% imc=interp2(im,ugc*(abs(dx)/2),vgc-dy);
+			% case{"dgb", "dbg", "gbd", "bdg", "bgd", "gdb" }
+				% imc=interp2(im,ugc*(abs(dx)/2),vgc+dy);
+				% disp("12\n");
+			% case{"dhb", "dbh", "hbd", "bdh", "bhd", "hdb" }
+				% imc=interp2(im,ugc-dx,vgc*(abs(dy)/2));
+				% disp("13\n");
+			% case{"ghb", "gbh", "hbg", "bgh", "bhg", "hgb" }
+				% imc=interp2(im,ugc+dx,vgc*(abs(dy)/2));
+				% disp("14\n");
+			% case{"ghbd", "ghdb", "gdhb", "dghb", "dgbh", "dbgh","bdgh", "bdhg","bhdg","hbdg", "hbgd", "hbdg","hdbg","dhbg","dhgb"}
+				% imc=interp2(im,ugc-dx,vgc*(abs(dy)/2));
+				% disp("15\n");
+			% otherwise
+				% disp("0\n");
+				% % si d ou h 
+		% endswitch
 		
-		 %+dx +dy
-		 imc=reshape(imc, size(xg));
-		 imagesc(imc);
+		 % %+dx +dy
+		 % imc=reshape(imc, size(xg));
+		 % imagesc(imc);
 		
-		 title(['mire recorigee sur les cotes:' side])
-	 endwhile
-endfunction
+		 % title(['mire recorigee sur les cotes:' side])
+	 % endwhile
+%endfunction
