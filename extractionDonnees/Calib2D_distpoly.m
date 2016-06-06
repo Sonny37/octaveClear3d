@@ -190,9 +190,9 @@ img='11502003-2016-05-20-165246.tif';
         
     
 	figure;	grid on;
-	plot(uv(:,1),uv(:,2),'og;"points reprojetes";',uv(:,1)-uCorrige, uv(:,2)-vCorrige,'xb;"points corriges";', u, v, 'sr;"points detectes";');
-	saveas(gcf,['Mire_Reconstruction.png']);
-
+	plot(uv(:,1),uv(:,2),'og;points reprojetes;',uv(:,1)-uCorrige, uv(:,2)-vCorrige,'xb;points corriges;', u, v, 'sr;points detectes;');
+	saveas(gcf,['Mire_Reconstruction' img(end-9:end-4) '.png']);
+	legend(gcf,"location", "northoutside");
 
 	figure % WITH SUBPLOTS AND DATA
 	subplot(211);
@@ -208,7 +208,7 @@ img='11502003-2016-05-20-165246.tif';
 	newPosition = [0.01 0.49 0.2 0.05]; %[  posx, pos y,espace legende et texte legende, interligne legende]
 	newUnits = 'normalized';
 	set(hL,'Position', newPosition,'Units', newUnits);
-	saveas(gcf,'errRepro.png');
+	saveas(gcf,['errRepro' img(end-9:end-4) '.png']);
 	
 	
 	figure
@@ -216,7 +216,7 @@ img='11502003-2016-05-20-165246.tif';
 	title('Ecarts entre les coordonnees u et v avant et apres calibration');
 	
 	%   SAVING FIGURE
-	saveas(gcf,['MireEcarts.png']);
+	saveas(gcf,['MireEcarts' img(end-9:end-4) '.png']);
 
     % Mesure de la resolution moyenne de l'image
     
@@ -277,7 +277,7 @@ img='11502003-2016-05-20-165246.tif';
     
 	imagesc(Ig); 
 	title('Mire avant correction')
-	saveas(gcf,['MireEauavantCorrection.png'])
+	saveas(gcf,['MireEauavantCorrection' img(end-9:end-4) '.png'])
     
 		%correction de la mire
 		
@@ -309,7 +309,7 @@ img='11502003-2016-05-20-165246.tif';
 	imagesc(imc);
 	title(['Mire Corrigee - resolution =' num2str(resolution) ])
 	
-	saveas('gcf','MireEauapresCorrection.png')
+	saveas(gcf,['MireEauapresCorrection' img(end-9:end-4) '.png'])
 	
 	%------------- POUR REDIMENSIONER LA GRILLE (facultatif )--- commenter ou décommenter des lignes 273 à 349
 	% printf("Indiquer le nombres de cercles et de demi cercles en sp%ccifiant la surface de la grille : exemple 15 x 15.\n",130);
