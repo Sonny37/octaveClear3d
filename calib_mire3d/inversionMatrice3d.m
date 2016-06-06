@@ -4,9 +4,6 @@ function [M, X, Y, Z, u, v, uv] = inversionMatrice3d(pointsXYZUV)
 %chargement des positions des points X Y Z u v
 camera1 = load (pointsXYZUV);
 
-%camera_1 = load ('C:\Users\vrouille\Downloads\calib_mire3d\mire3d\XYZUV_cam1.txt');
-%camera_2 = load ('C:\Users\vrouille\Downloads\calib_mire3d\mire3d\XYZUV_cam2.txt');
-
 %paramètres
 X=camera1(:,1);
 Y=camera1(:,2);
@@ -57,7 +54,3 @@ max(uv(:,1)-u) % val max de u
 sqrt(mean((u-uv(:,1)).^2+(v-uv(:,2)).^2)) % norme de u
 sqrt(std(uv(:,1)-u)^2+std(uv(:,2)-v)^2) % norme de u d'apres l'erreur standard
 endfunction
-
-
-
-
