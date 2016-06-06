@@ -1,6 +1,7 @@
 %function [I,J, cdu, cdv, imc, resolution,ugc, vgc, xg,yg,errU,errV,uv]=Calib2D_distpoly(img,polyOrder) %eventually add polynome order
-%imload
-%img=s.i2;
+imload
+img=input("s.i?:");
+% img=s.i4;
 polyOrder=4; % default value
 
 
@@ -18,7 +19,7 @@ polyOrder=4; % default value
 	
 %img='E:\Projects\SourceTree\octaveClear3d\extractionDonnees\11502003-2016-05-20-165140.tif';	
 % img='E:\Projects\SourceTree\octaveClear3d\extractionDonnees\11502003-2016-05-20-165215.tif';	
-img='11502003-2016-05-20-165246.tif';	
+%img='11502003-2016-05-20-165246.tif';	
 
 	if strcmp('tiff',img(end-3:end)) || strcmp('tif',img(end-2:end))
 		im=double(imread(img)); % fichier
@@ -77,6 +78,7 @@ img='11502003-2016-05-20-165246.tif';
             Y1=repmat(Y,1,5);
             Y1=reshape(Y1,75,1);
             Y=repmat(Y1,3,1);
+			
         case 2 %----- méthode 2 --------
 			clf;
             imagesc(im);
@@ -99,10 +101,18 @@ img='11502003-2016-05-20-165246.tif';
 			
 			% exclusion des derniers points de coordonées
 			% les points les plus au bords 13*4 + 4*1
-			X(end-56:end)=[];
-			Y(end-56:end)=[];
-			I(end-56:end)=[];
-			J(end-56:end)=[];
+			% X(end-56:end)=[];
+			% Y(end-56:end)=[];
+			% I(end-56:end)=[];
+			% J(end-56:end)=[];
+			% X(end/2+1:end)=[];
+			% Y(end/2+1:end)=[];
+			% I(end/2+1:end)=[];
+			% J(end/2+1:end)=[];
+			X(1:end/2+1)=[];
+			Y(1:end/2+1)=[];
+			I(1:end/2+1)=[];
+			J(1:end/2+1)=[];
 					
 			
             %récupération de coordonées réelles et calculées
