@@ -27,7 +27,16 @@ polyOrder=4; % default value
 		im=img; %matrice
 	endif
 	
-    nxy=[15 15];  %225 pts en 15 par 15
+	%reduce image to what we want to process
+	[height, width]=size(im);
+	 pkg load image
+	imshow(img);
+	[mx,my]=ginput(4);
+	close(gcf)
+	immask=poly2mask(mx, my, height, width);
+	im=immask.*im;
+	%%
+    nxy=[15 15];  % 225 pts en 15 par 15
     ws=32;        % valeur exacte 4.19px....
     
 	choixMethode = input ("Methode de localisation des points\n1 - en grille 4 par 4\n2 - par iteration\n"); 
@@ -86,10 +95,9 @@ polyOrder=4; % default value
             # puis son voisin selon x et son voisin selon y pour créer un repère 
             # Oxy (cf points verts sur la figure jointe)
             [px,py]=ginput(3) 
-            %2[X,Y,I,J,C,imref,immarker,imorg,im00]=locate(-im,round([py,px]),.7);
-            [X,Y,I,J,C,imref,immarker,imorg,im00]=locate2(-im,round([py,px]),.7);
-
-            clf;
+           
+		   [X,Y,I,J,C,imref,immarker,imorg,im00]=locate2(-im,round([py,px]),.7);
+			clf;
             imagesc(im);
             hold on;
             
@@ -105,16 +113,7 @@ polyOrder=4; % default value
 			% Y(end-56:end)=[];
 			% I(end-56:end)=[];
 			% J(end-56:end)=[];
-			% X(end/2+1:end)=[];
-			% Y(end/2+1:end)=[];
-			% I(end/2+1:end)=[];
-			% J(end/2+1:end)=[];
-			X(1:end/2+1)=[];
-			Y(1:end/2+1)=[];
-			I(1:end/2+1)=[];
-			J(1:end/2+1)=[];
-					
-			
+						
             %récupération de coordonées réelles et calculées
             uv=[X Y];
             XX=[I*5];
@@ -229,44 +228,53 @@ polyOrder=4; % default value
 	saveas(gcf,['MireEcarts' img(end-9:end-4) '.png']);
 
     % Mesure de la resolution moyenne de l'image
-    
-	% mode auto : fonctionne uniquement si vous avez un écart de 7 par rapport à l'origine sur au moins 3 cotés'
+ 
+ %{ 
+	mode auto : fonctionne uniquement si vous avez un écart de 7 par rapport à l'origine sur au moins 3 cotés'
+	imin=-9;
+	imax=9;
+    jmin=-3;
+    jmax=4;
+
+	Mode manuel de sélection des points : utile si la selection de l'origine 
+	n'est pas au "centre de l'image" ==> décommenter lignes 262 à 294, commenter lignes 256 à 259
+	printf("Veuillez entrer le pas de d%ccalage mini et maxi pour chaque axe par rapport au point O d'origine. \nCe pas doit %ctre pris %c la derni%cre ligne ou colonne de points identifi%cs en rouge, \nles lignes non visibles ou non identifi%ces ne devant pas %ctre prises en compte.\n",130 , 136, 133 ,138,130,130,136);
+	imin=input("imin= ");
+	imax=input("imax = ");
+    jmin=input("jmin = ");
+    jmax=input("jmax = ");
+
+	printf("Entrer  le nombre de points en horizontal et en vertical (une ligne)\n")
+	jtotal=input("jtotal: ");
+	itotal=input("itotal: ");
+	if( imax-imin+1 < itotal )
+		printf("Veuillez entrer maintenant le nombre de lignes horizontales non marqu%ces sur les bords de la mire : \n si c'est %c gauche de la mire ajouter le signe '-'.\n",130,133);
+		di=input("dI =");
+	endif
+	if( imax-imin+1 < itotal )
+		printf("Veuillez entrer maintenant le nombre de lignes verticales %c priori non visibles sur les bords de la mire : \n si c'est %c gauche de la mire ajouter le signe '-'.\n",133,133);
+		dj=input("dJ = ");
+	endif
 	
-	imin=-7;
-	imax=7;
-    jmin=-7;
-    jmax=7;
+	if(di < 0) % si - alors min
+		imin+=di;
+	else % si + alors max
+		imax+=di;
+	endif
+
+	if(dj < 0) % si - alors min
+		jmin +=dj;
+	else % si + alors max
+		jmax+=dj;
+	endif
+%}
+
 	
-	% Mode manuel de sélection des points : utile si la selection de l'origine n'est pas au"centre de l'image (décommenter lignes 199 à 225)
-																												%commenter lignes 193 à 196
-	%printf("Veuillez entrer le pas de d%ccalage mini et maxi pour chaque axe par rapport au \npoint O d'origine. Ce pas doit %ctre pris %c la derni%cre ligne ou colonne de points identifi%cs en rouge, les lignes non visibles ou non identifi%ces ne devant pas %ctre prises en compte.\n",130 , 136, 133 ,138,130,130,136);
-	% imin=input("imin= ");
-	% imax=input("imax = ");
-    % jmin=input("jmin = ");
-    % jmax=input("jmax = ");
+	imin=min(I(:))-1;
+	imax=max(I(:))+1;
+	jmin=min(J(:))-1;
+	jmax=max(J(:))+1;
 	
-	% %printf("Veuillez entrer maintenant le nombre de lignes %c priori non visibles sur les bords de la mire : \n Si c'est %c gauche de la mire ajouter le signe '-'.",133);
-	% %di=input("dI =");
-	% %dj=input("dJ = ");
-	% if((imax-imin+1) != 15) % +1 en comptant le point origine
-		% printf("Le nombre de lignes en abcisses est < %c 15. Sur les bords gauche et droit de la mire, une ligne manque : \n Si c'est %c gauche de la mire ajouter le signe '-' au chiffre.",133, 133);
-		% di=input("dI =");
-		% if(di < 0) % si - alors min
-			% imin +=di;
-		% else % si + alors max
-			% imax+=di
-		% endif
-	% endif
-	% if((jmax-jmin)+1 != 15)
-		% printf("Le nombre de lignes en ordonn%ces est < %c 15. Sur les bords haut et bas de la mire, une ligne manque : si c'est en bas de la mire, ajouter le signe '-' au chiffre.", 130,133);
-		% dj=input("dJ =");
-		% if(dj < 0) % si - alors min
-			% jmin +=dj;
-		% else % si + alors max
-			% jmax+=dj;
-		% endif
-	% endif	
-    
     suv=M*[imin imax; jmin jmax; 1 1];
     suv=suv(1:2,:)./suv([3;3],:);
     resolution=sqrt((suv(2,1)-suv(1,1))^2+(suv(2,2)-suv(1,2))^2);
@@ -311,93 +319,111 @@ polyOrder=4; % default value
 	
 	%Construction de la nouvelle grille
 	%pkg load signal
+	%- AFFICHAGE MIRE CORRIGEE
 	figure
 	imc=interp2(im,ugc,vgc); %+dx +dy
 	imc=reshape(imc, size(xg));
-	
-	%- AFFICHAGE MIRE CORRIGEE
+	axis equal
 	imagesc(imc);
 	title(['Mire Corrigee - resolution =' num2str(resolution) ])
 	
 	saveas(gcf,['MireEauapresCorrection' img(end-9:end-4) '.png'])
+	hold on;
+
+
+	%- Correction image particule avec mire corrigee
+	printf("Entrer le chemin de l'image à corriger:");
+	im2correct=input("\n");
+	im2=imread(im2correct);
 	
-	%------------- POUR REDIMENSIONER LA GRILLE (facultatif )--- commenter ou décommenter des lignes 273 à 349
-	% printf("Indiquer le nombres de cercles et de demi cercles en sp%ccifiant la surface de la grille : exemple 15 x 15.\n",130);
-	% x=input("x : ");
-	% y=input("y : ");
+	imc2=interp2(im2,ugc,vgc); %+dx +dy
+	imc2=reshape(imc2, size(xg));
+	figure;
+	imagesc(imc2);
 	
-	% if( x != 15)
-		% dx=(15-x)*(px(2)-px(1));
-	% else
-		% dx=(px(2)-px(1))/2;
-	% endif
-	% if( y != 15)
-		% dy=(15-y)*(py(2)-py(1));
-	% else
-		% dy=(py(2)-py(1))/2;
-	% endif
+	axis xy; % flip image horizontally
+	axis equal;
+	
+	
+	%----- POUR REDIMENSIONER LA GRILLE (facultatif )--- commenter ou décommenter des lignes 350 à 427
+	%{
+	printf("Indiquer le nombres de cercles et de demi cercles en sp%ccifiant la surface de la grille : exemple 15 x 15.\n",130);
+	x=input("x : ");
+	y=input("y : ");
+	
+	if( x != 15)
+		dx=(15-x)*(px(2)-px(1));
+	else
+		dx=(px(2)-px(1))/2;
+	endif
+	if( y != 15)
+		dy=(15-y)*(py(2)-py(1));
+	else
+		dy=(py(2)-py(1))/2;
+	endif
 	 
 	 
-	% side="    ";
-	% while(side != "stop")
-		% printf("Indiquer %cgalement les cot%cs o%c il manque la ou les lignes : droite = d, bas = b, haut = h, gauche = g\n",130,130,151);
-		% side=input("cote :");
-		% switch(side)
-			% case "g"
-				% imc=interp2(im,ugc-dx,vgc);
-				% disp("1\n");
-			% case "b"
-				% imc=interp2(im,ugc,vgc+dy);
-				% disp("2\n");
-			% case "d"
-				% imc=interp2(im,ugc+dx,vgc);
-				% disp("3\n");
-			% case "h"
-				% imc=interp2(im,ugc,vgc-dy);
-				% disp("4\n");
-			% case {"gb", "bg"}
-				% imc=interp2(im,ugc-dx,vgc+dy);
-				% disp("5n");
-			% case {"gh", "hg"}
-				% imc=interp2(im,ugc-dx,vgc-dy);
-				% disp("6\n");
-			% case {"dh", "hd"}
-				% imc=interp2(im,ugc+dx,vgc-dy);
-				% disp("7\n");
-			% case {"db", "bd"}
-				% imc=interp2(im,ugc-dx,vgc+dy);
-				% disp("8\n");
-			% case {"hb", "bh"}
-				% vgc2=[vgc(1:round(rows(vgc)/2-1))-dy;vgc(round(rows(vgc)/2));vgc(round(rows(vgc)/2)+1:rows(vgc))+dy];
-				% imc=interp2(im,ugc,vgc2);
-				% disp("9\n");
-			% case {"dg", "gd"}
-				% imc=interp2(im,ugc*(abs(dx)/2),vgc);
-				% disp("10\n");
-			% case{"dgh", "dhg", "ghd", "hdg", "hgd", "gdh" }
-				% disp("11\n");
-				% imc=interp2(im,ugc*(abs(dx)/2),vgc-dy);
-			% case{"dgb", "dbg", "gbd", "bdg", "bgd", "gdb" }
-				% imc=interp2(im,ugc*(abs(dx)/2),vgc+dy);
-				% disp("12\n");
-			% case{"dhb", "dbh", "hbd", "bdh", "bhd", "hdb" }
-				% imc=interp2(im,ugc-dx,vgc*(abs(dy)/2));
-				% disp("13\n");
-			% case{"ghb", "gbh", "hbg", "bgh", "bhg", "hgb" }
-				% imc=interp2(im,ugc+dx,vgc*(abs(dy)/2));
-				% disp("14\n");
-			% case{"ghbd", "ghdb", "gdhb", "dghb", "dgbh", "dbgh","bdgh", "bdhg","bhdg","hbdg", "hbgd", "hbdg","hdbg","dhbg","dhgb"}
-				% imc=interp2(im,ugc-dx,vgc*(abs(dy)/2));
-				% disp("15\n");
-			% otherwise
-				% disp("0\n");
-				% % si d ou h 
-		% endswitch
+	side="    ";
+	while(side != "stop")
+		printf("Indiquer %cgalement les cot%cs o%c il manque la ou les lignes : droite = d, bas = b, haut = h, gauche = g\n",130,130,151);
+		side=input("cote :");
+		switch(side)
+			case "g"
+				imc=interp2(im,ugc-dx,vgc);
+				disp("1\n");
+			case "b"
+				imc=interp2(im,ugc,vgc+dy);
+				disp("2\n");
+			case "d"
+				imc=interp2(im,ugc+dx,vgc);
+				disp("3\n");
+			case "h"
+				imc=interp2(im,ugc,vgc-dy);
+				disp("4\n");
+			case {"gb", "bg"}
+				imc=interp2(im,ugc-dx,vgc+dy);
+				disp("5n");
+			case {"gh", "hg"}
+				imc=interp2(im,ugc-dx,vgc-dy);
+				disp("6\n");
+			case {"dh", "hd"}
+				imc=interp2(im,ugc+dx,vgc-dy);
+				disp("7\n");
+			case {"db", "bd"}
+				imc=interp2(im,ugc-dx,vgc+dy);
+				disp("8\n");
+			case {"hb", "bh"}
+				vgc2=[vgc(1:round(rows(vgc)/2-1))-dy;vgc(round(rows(vgc)/2));vgc(round(rows(vgc)/2)+1:rows(vgc))+dy];
+				imc=interp2(im,ugc,vgc2);
+				disp("9\n");
+			case {"dg", "gd"}
+				imc=interp2(im,ugc*(abs(dx)/2),vgc);
+				disp("10\n");
+			case{"dgh", "dhg", "ghd", "hdg", "hgd", "gdh" }
+				disp("11\n");
+				imc=interp2(im,ugc*(abs(dx)/2),vgc-dy);
+			case{"dgb", "dbg", "gbd", "bdg", "bgd", "gdb" }
+				imc=interp2(im,ugc*(abs(dx)/2),vgc+dy);
+				disp("12\n");
+			case{"dhb", "dbh", "hbd", "bdh", "bhd", "hdb" }
+				imc=interp2(im,ugc-dx,vgc*(abs(dy)/2));
+				disp("13\n");
+			case{"ghb", "gbh", "hbg", "bgh", "bhg", "hgb" }
+				imc=interp2(im,ugc+dx,vgc*(abs(dy)/2));
+				disp("14\n");
+			case{"ghbd", "ghdb", "gdhb", "dghb", "dgbh", "dbgh","bdgh", "bdhg","bhdg","hbdg", "hbgd", "hbdg","hdbg","dhbg","dhgb"}
+				imc=interp2(im,ugc-dx,vgc*(abs(dy)/2));
+				disp("15\n");
+			otherwise
+				disp("0\n");
+				% si d ou h 
+		endswitch
 		
-		 % %+dx +dy
-		 % imc=reshape(imc, size(xg));
-		 % imagesc(imc);
+		 %+dx +dy
+		 imc=reshape(imc, size(xg));
+		 imagesc(imc);
 		
-		 % title(['mire recorigee sur les cotes:' side])
-	 % endwhile
+		 title(['mire recorigee sur les cotes:' side])
+	 endwhile
+	%}
 %endfunction
