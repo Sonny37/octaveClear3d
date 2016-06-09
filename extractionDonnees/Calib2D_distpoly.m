@@ -21,7 +21,7 @@ polyOrder=4; % default value
 % img='E:\Projects\SourceTree\octaveClear3d\extractionDonnees\11502003-2016-05-20-165215.tif';	
 %img='11502003-2016-05-20-165246.tif';	
 
-	if strcmp('tiff',img(end-3:end)) || strcmp('tif',img(end-2:end))
+	if strcmp('tiff',img(end-3:end)) || strcmp('tif',img(end-2:end)) || strcmp('pgm',img(end-2:end))
 		im=double(imread(img)); % fichier
 	else
 		im=img; %matrice
