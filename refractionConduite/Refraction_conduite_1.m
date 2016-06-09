@@ -31,7 +31,7 @@ function [hk, hrk1, hrk2,R2]=Refraction_conduite_1(iterations)
 
 
 
-% indexs de réfraction 
+% index de réfraction 
 nH2O=1.33; %water
 nPMMA=1.51;%PMMA
 nair=1;
@@ -116,7 +116,7 @@ for k=1:iterations+1;
 				subplot(2,1,1);
 				plot(z1,'k',z2,'k',[-d;0],[0;h],'-og',[0;0],[R2;-R2],'b',[x1;x2;0],[y1;y2;y3],'-or');
 				xlabel("x [m]");ylabel("y [m]");
-				title(["Réfraction à travers une interface circulaire Air-PMMA de diamètre " num2str(2000*R1) "mm suivie d'une interface circulaire PMMA-Eau de diamètre " num2str(2000*R2) "mm"]);
+				title(["R\351fraction \340 travers une interface circulaire Air-PMMA de diam\350tre " num2str(2000*R1) "mm suivie d'une interface circulaire PMMA-Eau de diam\350tre " num2str(2000*R2) "mm"]);
 				hrk1(k)=y3;
 				if((cas2 == 0) && (exist(['i', num2str(iterations) ,'/hrk12_', num2str(k), '.png'])== 0))
 					saveas(1,['i', num2str(iterations) ,'/hrk12_', num2str(k), '.png']);
@@ -177,7 +177,7 @@ for k=1:iterations+1;
 		 subplot(2,1,2)
 		 plot([D;-D;-D;D;D],[-D;-D;D;D;-D],'k',z2,'k',[-d;0],[0;h],'-og',[0;0],[R2;-R2],'b',[x1;x2;0],[y1;y2;y3],'-or');
 		 xlabel("x [m]");ylabel("y [m]");
-		 title(["Réfraction à travers une interface plane Air-PMMA d'arête " num2str(2000*D) "mm suivie d'une interface circulaire PMMA-Eau de diamètre " num2str(2000*R2) "mm"])
+		 title(["R\351fraction \340 travers une interface plane Air-PMMA d'ar\352te " num2str(2000*D) "mm suivie d'une interface circulaire PMMA-Eau de diam\350tre " num2str(2000*R2) "mm"])
 		 
 		 hrk2(k)=y3;
 		 if(exist(['i', num2str(iterations) ,'/hrk12_', num2str(k), '.png'], 'file') == 0)
