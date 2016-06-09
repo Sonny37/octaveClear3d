@@ -171,6 +171,14 @@ kmax=ceil(rmax/sqrt(min((dx1+dy1)^2,(dx2+dy2)^2)));
 					%[dXc,dYc,dxc,dyc,Snr,C]=imcorr(im1,im2,[2*sx 2*sy],0,0,0,'sub');
 
 					% if correlation >clevel : register new point
+					
+					% ajout if pou éviter le calcul sur des points n uls
+					if(C1 == 0 )
+						C1= 1;
+					endif
+					if(C2 == 0 )
+						C2= 1;
+					endif
 				c12=max(C12(:)/C1/C2);
 				if c12>clevel
 					[mx,my]=find(C12==max(C12(:)));
