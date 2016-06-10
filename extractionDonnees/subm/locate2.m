@@ -1,9 +1,9 @@
 function [Y,X,I,J,C,imref,immarker,imorg,im00]=locate2(imorg,p,clevel)
-%function [X,Y,I,J]=locate2(im,p,clevel)
+%function [X,Y,I,J,C,imref,immarker,imorg,im00]=locate2(imorg,p,clevel)
 % or data=locate(im,p,clevel)
 % find grid markers on an image
-% im : image data to analyse (or tiff, png, jpg,... filename readable by Octave)
-% p0 : 3x2 array defining origin and main axis points in image
+% imorg : image data to analyse (or tiff, png, jpg,... filename readable by Octave)
+% p : 3x2 array defining origin and main axis points in image
 %                   + p(3,:)
 %                   |
 %                   +---+ p(2,:)
