@@ -1,9 +1,12 @@
-imc = function imcorrectPattern(im, img, M, uv, u, v, I, J, bSave, folderPath)    
+function [imc,ugc,vgc, xg, yg,cdu,cdv,resolution,errU,errV] = imcorrectPattern(im, img, M, uv, u, v, I, J, polyOrder, bSave, folderPath)    
     %INPUT:
 	%	im,img : calibrated and original pictures
 	% 	M : calibrated matrice
 	% 	uv, u , v : projected and detected  coordinates
 	% 	I,J : position of markers on the grid
+	% 	cdu,cdv : coordinates coefficients used for polynomial function 
+	%   resolution:  new grid resolution of imc
+	%   errU, errV : standard errors for each axes
 	%	bSave, folderpath : additionnal parameters if figures want to be saved
 	%
 	% OUTPUT

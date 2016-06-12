@@ -1,4 +1,4 @@
-[imp, yim, xim]= function imcorrectParticles(im2correct,ugv,vgc, xg, yg)
+function [imp, yim, xim]= imcorrectParticles(im2correct,ugc,vgc, xg, yg,bSave)
 	%INPUT
 	% 	im2correct : image to correct using grid size of corrected pattern 
 	%	ugc,vgc : corrected coodinates from pattern
@@ -7,19 +7,18 @@
 	% 	imp : particle image corrected 
 	%	yim,xim : grid
 	
-	printf("Entrer le chemin de l'image à corriger:");
 	imp=imread(im2correct);
 	
 	imp=interp2(imp,ugc,vgc); 
-	imp=reshape(imc2, size(xg));
+	imp=reshape(imp, size(xg));
 	figure;
 	imagesc(imp);
 	
 	axis xy; % flip image horizontally
 	axis equal;
-	[l,b,w,h]=get(gcf,"position")
-	yim=h;
-	xim=w;
+	[lbwh]=get(gcf,"position");
+	yim=lbwh(1,4);
+	xim=lbwh(1,3);
 	if(bSave == 'y')
 		saveas(gcf, [folderPath 'ImgParticle' im2correct(end-9:end-3) '.png']);
 	endif

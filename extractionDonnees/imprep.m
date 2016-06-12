@@ -1,4 +1,4 @@
-[im,mx,my]= function imprep(im)
+function [im,mx,my] = imprep(img)
 	%INPUT 
 	%	im : loaded image
 	% OUTPUT  

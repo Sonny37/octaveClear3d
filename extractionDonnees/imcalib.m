@@ -1,13 +1,19 @@
-function imcalib(im,nxy,ws)
+function [I,J,uv,M, u, v,XX,YY,px,py] = imcalib(im,nxy,ws)
 	%INPUT : 
 	%	im : loaded image to calibrate
 	%   nxy, ws : pattern data used for grid localization method
+	%OUTPUT
+	% 	I,J : markers coordinates
+	%	uv u, v : reprojected coordinates and initial coordinates
+	%	XX,YY : Calculated coordiantes
+	%	px,py: coordinates of origin
 	
+	chdir('subm'); % go subfolder
 	detectionMethod = input ("Methode de localisation des points\n1 - en grille 4 par 4\n2 - par iteration\n"); 
 	switch(detectionMethod )
         case 1  %----- méthode 1 --- localisation de l'image avec locate grid 4 pt ou 12 actuellmeent
 			amax=input("Preciser le nombre de grille que vous voulez effectuer sur la mire: ");
-            chdir('subm'); % go subfolder
+            
 			for a=1:amax
 				
 				[uv,uv_interp,uv0] =locate_grid4pt(-im,nxy,ws,amax,a);
@@ -60,6 +66,9 @@ function imcalib(im,nxy,ws)
             
 			plot(px,py,'og',X,Y,'*r');
 			colormap gray
+			hold on;
+			comet(X,Y);
+			pause;
 			
 			% exclusion des derniers points de coordonées
 			% les points les plus au bords 13*4 + 4*1
