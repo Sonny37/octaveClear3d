@@ -13,18 +13,19 @@ function [I,J,uv,M, u, v,XX,YY,px,py] = imcalib(im,nxy,ws)
 	switch(detectionMethod )
         case 1  %----- méthode 1 --- localisation de l'image avec locate grid 4 pt ou 12 actuellmeent
 			amax=input("Preciser le nombre de grille que vous voulez effectuer sur la mire: ");
-            
-			for a=1:amax
-				
+            for a=1:amax
 				[uv,uv_interp,uv0] =locate_grid4pt(-im,nxy,ws,amax,a);
                  temp1{a}=uv;
                  temp2{a}=uv_interp;
                  temp3{a}=uv0;  
             endfor
-			    uv=[temp1{1} ;temp1{2} ;temp1{3}];
-                uv_interp=[temp2{1}; temp2{2}; temp2{3}];
-                uv0=[temp3{1}; temp3{2}; temp3{3}];
-                
+			
+
+			for a=1:amax
+			    uv=[ uv ; temp1{a}];
+                uv_interp=[uv_interp;temp2{a}];
+                uv0=[uv0; temp3{a}];
+            endfor
             %setup coordonnées (en pixels) :     %sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
             %si une grille de 5*3 = 15 ==> 5X sur 15Y *3 -------------------------------
 			espaceAuBord=1.6774647887324; 			%1mm 
