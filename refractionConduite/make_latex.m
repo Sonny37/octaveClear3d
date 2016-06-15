@@ -39,7 +39,7 @@ fontsz_ax = 16;
 % end
 
 % may need to rescale image slightly to ensure all of the axis label is printed
-scalefactor = 0.75;  % can modifiy this depending on fontsz etc
+scalefactor = 0.75;  % can modify this depending on fontsz etc
 
 % -------------------------------------------------------------------------
 % START CREATING PLOT
