@@ -1,4 +1,4 @@
-function [imc,ugc,vgc, xg, yg,cdu,cdv,resolution,errU,errV] = imcorrectPattern(im, img, M, uv, u, v, I, J, polyOrder, bSave, folderPath)    
+function [imc,ugc,vgc, xg, yg,cdu,cdv,resolution,errU,errV] = imcorrectPattern(im, img, M, uv, u, v, I=0, J=0, polyOrder, bSave, folderPath)    
     %INPUT:
 	%	im,img : calibrated and original pictures
 	% 	M : calibrated matrice
@@ -67,13 +67,13 @@ function [imc,ugc,vgc, xg, yg,cdu,cdv,resolution,errU,errV] = imcorrectPattern(i
 	if(bSave == 'y')
 		saveas(gcf,[folderPath 'MireEcarts' img(end-9:end-4) '.png']); 
 	endif
-	
-	%Etirer Images
-  	imin=min(I(:))-1;
-	imax=max(I(:))+1;
-	jmin=min(J(:))-1;
-	jmax=max(J(:))+1;
-	
+		
+		%Etirer Images
+		imin=min(I(:))-1;
+		imax=max(I(:))+1;
+		jmin=min(J(:))-1;
+		jmax=max(J(:))+1;
+		
     suv=M*[imin imax; jmin jmax; 1 1];
     suv=suv(1:2,:)./suv([3;3],:);
     resolution=sqrt((suv(2,1)-suv(1,1))^2+(suv(2,2)-suv(1,2))^2);
