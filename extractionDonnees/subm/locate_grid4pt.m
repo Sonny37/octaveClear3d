@@ -74,11 +74,15 @@ function [uv,uv_interp,uv0]=locate_grid4pt(I,nxy,ws,amax);
 	
 	
 	hold on;
-	h1=plot(u0,v0,'xb');
-	h2=plot(uv_interp(:,1),uv_interp(:,2),'+g');
-	h3=plot(uv(:,1),uv(:,2),'or');
-	title('Detection result');
-	if(a == amax)
-		legend({'selected markers'},{'interpolated grid'},{'detected markers'});
-	endif
+	
+	title('Detection result','fontsize', 14, 'fontname','latex', 'fontweight', 'bold')
+	
+	plot(u0,v0,'xb;selected markers;');
+	plot(uv_interp(:,1),uv_interp(:,2),'+g;interpolated grid;');
+	plot(uv(:,1),uv(:,2),'or;detected markers;');
+	
+	hh=legend('location', 'northoutside');%only to get handle
+	set(hh,'Units', 'normalized', 'fontsize', 12, 'orientation', 'horizontal');
+	set(gca,'fontsize', 12, 'fontname','latex')	
+	
 endfunction

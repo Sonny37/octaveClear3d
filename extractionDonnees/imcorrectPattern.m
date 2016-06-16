@@ -53,9 +53,7 @@ function [imc,ugc,vgc, xg, yg,cdu,cdv,resolution,errU,errV] = imcorrectPattern(i
 	title('erreur de reprojections');
 	
 	% Programatically move the Legend to the center west
-	newPosition = [0.01 0.49 0.2 0.05]; %[ posx, pos y, espace legende et texte legende, interligne legende]
-	newUnits = 'normalized';
-	set(hL,'Position', newPosition,'Units', newUnits);
+	set(hL,'Position', [0.01 0.49 0.2 0.05],'Units', 'normalized');
 	
 	if(bSave == 'y')
 		saveas(gcf,[folderPath 'errRepro' img(end-9:end-4) '.png']);
@@ -63,7 +61,7 @@ function [imc,ugc,vgc, xg, yg,cdu,cdv,resolution,errU,errV] = imcorrectPattern(i
 	
 	figure
 	plot(uv(:,1)-u, uv(:,2)-v,'o',uv(:,1)-u-uCorrige,uv(:,2)-v-vCorrige,'x')
-	title('Ecarts entre les coordonnees u et v avant et apres calibration');
+	title('Ecarts entre les coordonnees u et v avant et apres calibration', 'fontsize', 16, 'fontweight', 'bold');
 	
 	%   SAVING FIGURE with end name of file
 	if(bSave == 'y')
@@ -95,7 +93,10 @@ function [imc,ugc,vgc, xg, yg,cdu,cdv,resolution,errU,errV] = imcorrectPattern(i
     Ig=reshape(Ig,size(xg));
     
 	imagesc(Ig); 
-	title('Mire avant correction')
+	%modify image settings
+	title('Mire avant correction','fontsize',16, 'fontname', 'Times','fontweight','bold')
+	set(gca,'fontsize',16, 'fontname', 'Times');
+	
 	if(bSave == 'y')
 		saveas(gcf,[folderPath 'MireEauavantCorrection' img(end-9:end-4) '.png'])
     endif
@@ -125,9 +126,14 @@ function [imc,ugc,vgc, xg, yg,cdu,cdv,resolution,errU,errV] = imcorrectPattern(i
 	figure
 	imc=interp2(im,ugc,vgc); %+dx +dy
 	imc=reshape(imc, size(xg));
+	
 	axis equal
 	imagesc(imc);
-	title(['Mire Corrigee - resolution =' num2str(resolution) ])
+	
+	%modify image settings
+	title(['Mire apres correction - resolution ' num2str(resolution)],'fontsize',16, 'fontname', 'Times','fontweight','bold');
+	set(gca,'fontsize',16, 'fontname', 'Times');
+	
 	hold on;
 	if(bSave == 'y')
 		saveas(gcf,[folderPath 'MireEauapresCorrection' img(end-9:end-4) '.png'])
