@@ -68,8 +68,9 @@ function [I,J,uv,M, u, v,XX,YY,px,py] = imcalib(im,nxy,ws)
 			plot(px,py,'og',X,Y,'*r');
 			colormap gray
 			hold on;
-			comet(X,Y);
-			pause;
+			%comet(X,Y);
+			%set(gca,'fontsize', 16, 'fontname', 'Times')
+			%pause;
 			
 			% exclusion des derniers points de coordonées
 			% les points les plus au bords 13*4 + 4*1
