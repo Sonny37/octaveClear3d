@@ -1,4 +1,4 @@
-function [I,J, cdu, cdv, imc, resolution, ugc, vgc, xg,yg ,errU,errV,uv,px,py]=Calib2D_distpoly(img,polyOrder=4, nxy=[19 8], ws=32) %eventually add polynome order
+function [I,J, cdu, cdv, imc, resolution, ugc, vgc, xg,yg ,errU,errV,uv]=Calib2D_distpoly(img,polyOrder=4, nxy=[19 8], ws=32) %eventually add polynome order
 	%function [I,J, cdu, cdv, imc, resolution,ugc, vgc, xg,yg,errU,errV,uv]=Calib2D_distpoly(img,polyOrder,nxy, ws) %eventually add polynome order
 	%This function calibrates and corrects a pattern which will be then used for correcting another image
 	%INPUT 
@@ -19,12 +19,12 @@ function [I,J, cdu, cdv, imc, resolution, ugc, vgc, xg,yg ,errU,errV,uv,px,py]=C
 		% px,py : coordinates of origin (method 2)
 	
 	[im,mx,my] = imprep(img);	% -- prepare image for processing --    
-    bSave=input("Would you like to save the image that gonna be printed ? (y)es or (n)o :\n If yes, a dialog will ask you where to. Don't forget the ' '\n")
+    bSave=input("Would you like to save the image that gonna be printed ? (y)es or (n)o :\n If yes, a dialog will ask you where to. Don't forget the ' '\n");
 	if(bSave == 'y')	
 		folderPath=uigetdir();
 	endif
-	
-	[I,J,uv, M, u, v,XX,YY,px,py] = imcalib(im,nxy,ws);			% -- Calibrate image (Find matrix and new coordinates )-- 
+	%nxy=input["please specify the grid size in points. Example : [10 10] => " ]
+	[I,J,uv, M, u, v,XX,YY] = imcalib(im,nxy,ws);			% -- Calibrate image (Find matrix and new coordinates )-- 
 	[imc,ugc,vgc, xg, yg,cdu,cdv,resolution,errU,errV]=imcorrectPattern(im, img, M, uv, u, v, I, J, polyOrder, bSave, folderPath="");	% -- Managing distorsion --
 	im2correct=input("Fill in the path of the picture you want to correct:\n");
 	[imp, yim, xim]=imcorrectParticles(im2correct,ugc,vgc, xg, yg,bSave);	% -- Enhance particle image using pattern --

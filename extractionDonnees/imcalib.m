@@ -1,4 +1,4 @@
-function [I,J,uv,M, u, v,XX,YY,px,py] = imcalib(im,nxy,ws)
+function [I,J, uv,M, u, v,XX,YY] = imcalib(im,nxy,ws)
 	%INPUT : 
 	%	im : loaded image to calibrate
 	%   nxy, ws : pattern data used for grid localization method
@@ -13,18 +13,8 @@ function [I,J,uv,M, u, v,XX,YY,px,py] = imcalib(im,nxy,ws)
 	switch(detectionMethod )
         case 1  %----- méthode 1 --- localisation de l'image avec locate grid 4 pt ou 12 actuellmeent
 			amax=input("Preciser le nombre de grille que vous voulez effectuer sur la mire: ");
-            
-			for a=1:amax
-				
-				[uv,uv_interp,uv0] =locate_grid4pt(-im,nxy,ws,amax,a);
-                 temp1{a}=uv;
-                 temp2{a}=uv_interp;
-                 temp3{a}=uv0;  
-            endfor
-			    uv=[temp1{1} ;temp1{2} ;temp1{3}];
-                uv_interp=[temp2{1}; temp2{2}; temp2{3}];
-                uv0=[temp3{1}; temp3{2}; temp3{3}];
-                
+			[uv,uv_interp,uv0] =locate_grid4pt(-im,nxy,ws,amax);
+			
             %setup coordonnées (en pixels) :     %sachant que la grille de l'image fait environ 1191 px  ou 7,1cm de coté
             %si une grille de 5*3 = 15 ==> 5X sur 15Y *3 -------------------------------
 			espaceAuBord=1.6774647887324; 			%1mm 
@@ -45,11 +35,14 @@ function [I,J,uv,M, u, v,XX,YY,px,py] = imcalib(im,nxy,ws)
             X2=reshape(X2,75,1);
             X3=reshape(X3,75,1);
                 
-            X=[X1;X2;X3];
+            XX=[X1;X2;X3];
             
             Y1=repmat(Y,1,5);
             Y1=reshape(Y1,75,1);
-            Y=repmat(Y1,3,1);
+            YY=repmat(Y1,3,1);
+			
+			I=XX./5;
+			J=YY./5;
 			
         case 2 %----- méthode 2 ----- itération autour d'un repère
 			clf;
@@ -67,8 +60,9 @@ function [I,J,uv,M, u, v,XX,YY,px,py] = imcalib(im,nxy,ws)
 			plot(px,py,'og',X,Y,'*r');
 			colormap gray
 			hold on;
-			comet(X,Y);
-			pause;
+			%comet(X,Y);
+			%set(gca,'fontsize', 16, 'fontname', 'Times')
+			%pause;
 			
 			% exclusion des derniers points de coordonées
 			% les points les plus au bords 13*4 + 4*1
@@ -114,4 +108,6 @@ function [I,J,uv,M, u, v,XX,YY,px,py] = imcalib(im,nxy,ws)
     uv = M*[XX YY ones(nbRows,1)]'; %s*uv = M(3,3)*([X Y 1])
     uv = (uv(1:2,:)./uv([3,3],:))'; %uv=suv/s
 	chdir('..'); % back  main folder
+	%whos 
+	%pause
 endfunction

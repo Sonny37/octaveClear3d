@@ -1,5 +1,5 @@
-function [hk, hrk1, hrk2,R2]=Refraction_conduite_1(iterations)
-%function [hk, hrk1, hrk2,R2]=Refraction_conduite_1(iterations)
+function [hk, hrk1, hrk2,R2]=refConduiteMatlab(iterations)
+%function [hk, hrk1, hrk2,R2]=refConduiteMatlab(iterations)
 %
 % Compute refraction of light rays from an external camera to a vertical plane inside a water filled PMMA duct
 % 2 cases:
@@ -116,7 +116,7 @@ for k=1:iterations+1;
 				z2=R2*exp(i*2*pi*[0:.01:1]);
 				subplot(2,1,1);
 				plot(z1,'k',z2,'k',[-d;0],[0;h],'-og',[0;0],[R2;-R2],'b',[x1;x2;0],[y1;y2;y3],'-or');
-				xlabel("x [m]");ylabel("y [m]");
+				xlabel('x [m]');ylabel('y [m]');
 				tt=sprintf("R%cfraction %c travers une interface circulaire Air-PMMA de diam%ctre %d mm suivie d'une interface circulaire PMMA-Eau de diam%ctre %dmm",char(233),char(224),char(232),2000*R1,char(232),2000*R2);
 				title(tt , "fontsize", 15);
 				make_latex;
